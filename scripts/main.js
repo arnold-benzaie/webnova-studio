@@ -16,9 +16,15 @@
       'nav.services': 'Services',
       'nav.pricing': 'Tarifs',
       'nav.process': 'Processus',
+      'nav.reviews': 'Avis',
+      'nav.faq': 'FAQ',
       'nav.about': 'À propos',
       'nav.contact': 'Contact',
       'nav.cta': 'Demander un devis',
+
+      'promo.tag': 'OFFRE DE LANCEMENT',
+      'promo.text': ' · Site web professionnel à Rs 9,000 seulement · Livraison 48h',
+      'promo.cta': "J'en profite",
 
       'hero.badge': 'Agence web certifiée à Maurice',
       'hero.title1': 'Votre site web',
@@ -99,6 +105,61 @@
       'pricing.ecom.f7': 'Support 6 mois',
       "pricing.note": "Besoin d'autre chose ? Demandez un devis personnalisé sur WhatsApp.",
 
+      'reviews.eyebrow': 'Ils nous font confiance',
+      'reviews.title': 'Ce que disent nos clients',
+      'reviews.r1.text': '"Service rapide et professionnel. Mon site a été livré en 48h comme promis. WhatsApp intégré marche parfaitement, j\'ai déjà reçu plusieurs commandes !"',
+      'reviews.r1.name': 'Priya R.',
+      'reviews.r1.role': 'Boutique en ligne, Curepipe',
+      'reviews.r2.text': '"Excellent rapport qualité-prix pour Maurice. Le design est moderne et mon restaurant a maintenant une vraie présence en ligne. Je recommande à 100%."',
+      'reviews.r2.name': 'Ashvin K.',
+      'reviews.r2.role': 'Restaurant, Grand Baie',
+      'reviews.r3.text': '"Communication facile sur WhatsApp, livraison rapide et résultat magnifique. Mon site est rapide et beau sur mobile. Merci WebNova !"',
+      'reviews.r3.name': 'Sandrine M.',
+      'reviews.r3.role': 'Coiffeuse indépendante, Quatre Bornes',
+      'reviews.trust1': 'Note moyenne',
+      'reviews.trust2': 'Délai moyen de livraison',
+      'reviews.trust3': 'Clients satisfaits',
+
+      'faq.eyebrow': 'Questions fréquentes',
+      'faq.title': 'Tout ce que vous voulez savoir',
+      'faq.q1': 'Combien coûte un site web à Maurice ?',
+      'faq.a1': 'Nos sites commencent à Rs 9,000 pour un site one-page professionnel. Le pack Pro à Rs 19,000 inclut jusqu\'à 5 pages, et l\'e-commerce démarre à Rs 35,000. Tous les prix sont transparents, sans frais cachés.',
+      'faq.q2': 'Combien de temps pour créer mon site ?',
+      'faq.a2': 'Pour un site Starter (one-page) : 48h après validation de la maquette. Pour un site Pro multi-pages : 5-7 jours. Pour un e-commerce complet : 2-3 semaines. Délais express disponibles sur demande.',
+      'faq.q3': "L'hébergement et le domaine sont-ils inclus ?",
+      'faq.a3': 'Oui ! L\'hébergement de la 1ère année est inclus dans tous nos packs. Le domaine .mu est en supplément (~Rs 2,000/an chez NIC.mu). Nous gérons l\'enregistrement pour vous.',
+      'faq.q4': 'Mon site sera-t-il bien sur mobile ?',
+      'faq.a4': 'Absolument. Tous nos sites sont 100% responsive — ils s\'adaptent parfaitement aux mobiles, tablettes et ordinateurs. À Maurice, 70% du trafic est mobile : c\'est notre priorité.',
+      'faq.q5': "Comment fonctionne l'intégration WhatsApp ?",
+      'faq.a5': 'Un bouton flottant WhatsApp apparaît sur toutes les pages. Quand vos visiteurs cliquent, ils sont redirigés vers WhatsApp avec un message pré-rempli. Vous pouvez aussi avoir un catalogue produits synchronisé avec WhatsApp Business.',
+      'faq.q6': 'Puis-je modifier mon site moi-même après ?',
+      'faq.a6': 'Oui. Pour les packs Pro et E-commerce, nous installons un panneau d\'administration simple où vous pouvez modifier textes, images et produits. Une formation rapide est incluse.',
+      'faq.q7': 'Acceptez-vous les paiements en plusieurs fois ?',
+      'faq.a7': 'Oui. Nous proposons un paiement en 2 ou 3 fois sans frais. 50% à la commande, le reste à la livraison du site (ou en mensualités).',
+      'faq.q8': 'Que se passe-t-il après la livraison ?',
+      'faq.a8': 'Vous bénéficiez d\'un support gratuit (3 mois pour Pro, 6 mois pour E-commerce) sur WhatsApp. Maintenance, petites modifications, conseils — nous restons disponibles.',
+
+      'lead.eyebrow': 'Devis gratuit',
+      'lead.title1': 'Recevez votre devis personnalisé',
+      'lead.title2': 'en 1h.',
+      'lead.subtitle': 'Remplissez ce formulaire et je vous recontacte sur WhatsApp avec une proposition adaptée à votre projet.',
+      'lead.p1': '✓ Réponse sous 1h en journée',
+      'lead.p2': '✓ Devis 100% gratuit',
+      'lead.p3': '✓ Aucune obligation',
+      'lead.p4': '✓ Confidentialité garantie',
+      'lead.name': 'Nom complet',
+      'lead.phone': 'Téléphone / WhatsApp',
+      'lead.email': 'Email (optionnel)',
+      'lead.package': 'Quel pack vous intéresse ?',
+      'lead.select': '— Sélectionnez —',
+      'lead.opt1': 'Starter (Rs 9,000)',
+      'lead.opt2': 'Pro (Rs 19,000)',
+      'lead.opt3': 'E-commerce (Rs 35,000)',
+      'lead.opt4': 'Devis personnalisé',
+      'lead.message': 'Décrivez votre projet (optionnel)',
+      'lead.submit': 'Envoyer ma demande',
+      'lead.note': '🔒 Vos infos restent confidentielles. Aucun spam.',
+
       'about.eyebrow': 'À propos',
       'about.title1': 'Le studio web qui parle',
       'about.title2': 'votre langue.',
@@ -135,9 +196,15 @@
       'nav.services': 'Services',
       'nav.pricing': 'Pricing',
       'nav.process': 'Process',
+      'nav.reviews': 'Reviews',
+      'nav.faq': 'FAQ',
       'nav.about': 'About',
       'nav.contact': 'Contact',
       'nav.cta': 'Get a quote',
+
+      'promo.tag': 'LAUNCH OFFER',
+      'promo.text': ' · Professional website for only Rs 9,000 · 48h delivery',
+      'promo.cta': 'Get this deal',
 
       'hero.badge': 'Certified web agency in Mauritius',
       'hero.title1': 'Your',
@@ -217,6 +284,61 @@
       'pricing.ecom.f6': 'Pro hosting + email',
       'pricing.ecom.f7': '6 months support',
       'pricing.note': 'Need something else? Get a custom quote on WhatsApp.',
+
+      'reviews.eyebrow': 'They trust us',
+      'reviews.title': 'What our clients say',
+      'reviews.r1.text': '"Fast and professional service. My site was delivered in 48h as promised. Integrated WhatsApp works perfectly, I\'ve already received several orders!"',
+      'reviews.r1.name': 'Priya R.',
+      'reviews.r1.role': 'Online shop, Curepipe',
+      'reviews.r2.text': '"Excellent value for money in Mauritius. The design is modern and my restaurant now has a real online presence. I 100% recommend."',
+      'reviews.r2.name': 'Ashvin K.',
+      'reviews.r2.role': 'Restaurant, Grand Baie',
+      'reviews.r3.text': '"Easy WhatsApp communication, fast delivery and beautiful result. My site is fast and looks great on mobile. Thank you WebNova!"',
+      'reviews.r3.name': 'Sandrine M.',
+      'reviews.r3.role': 'Independent hairdresser, Quatre Bornes',
+      'reviews.trust1': 'Average rating',
+      'reviews.trust2': 'Average delivery time',
+      'reviews.trust3': 'Happy clients',
+
+      'faq.eyebrow': 'Frequently asked questions',
+      'faq.title': 'Everything you want to know',
+      'faq.q1': 'How much does a website cost in Mauritius?',
+      'faq.a1': 'Our sites start at Rs 9,000 for a professional one-page site. The Pro pack at Rs 19,000 includes up to 5 pages, and e-commerce starts at Rs 35,000. All prices are transparent, no hidden fees.',
+      'faq.q2': 'How long does it take to create my site?',
+      'faq.a2': 'For a Starter site (one-page): 48h after mockup validation. For a Pro multi-page site: 5-7 days. For a full e-commerce: 2-3 weeks. Express delivery available on request.',
+      'faq.q3': 'Are hosting and domain included?',
+      'faq.a3': 'Yes! 1st year hosting is included in all our packs. The .mu domain is extra (~Rs 2,000/year at NIC.mu). We handle the registration for you.',
+      'faq.q4': 'Will my site work well on mobile?',
+      'faq.a4': 'Absolutely. All our sites are 100% responsive — they adapt perfectly to mobile, tablets and computers. In Mauritius, 70% of traffic is mobile: it\'s our priority.',
+      'faq.q5': 'How does WhatsApp integration work?',
+      'faq.a5': 'A floating WhatsApp button appears on all pages. When visitors click, they\'re redirected to WhatsApp with a pre-filled message. You can also have a product catalog synced with WhatsApp Business.',
+      'faq.q6': 'Can I edit my site myself afterwards?',
+      'faq.a6': 'Yes. For Pro and E-commerce packs, we install a simple admin panel where you can edit text, images and products. Quick training included.',
+      'faq.q7': 'Do you accept installment payments?',
+      'faq.a7': 'Yes. We offer 2 or 3 installments at no extra charge. 50% on order, the rest on site delivery (or monthly).',
+      'faq.q8': 'What happens after delivery?',
+      'faq.a8': 'You get free support (3 months for Pro, 6 months for E-commerce) on WhatsApp. Maintenance, small changes, advice — we stay available.',
+
+      'lead.eyebrow': 'Free quote',
+      'lead.title1': 'Get your custom quote',
+      'lead.title2': 'in 1 hour.',
+      'lead.subtitle': 'Fill out this form and I\'ll get back to you on WhatsApp with a tailored proposal.',
+      'lead.p1': '✓ Reply within 1h on business hours',
+      'lead.p2': '✓ 100% free quote',
+      'lead.p3': '✓ No obligation',
+      'lead.p4': '✓ Privacy guaranteed',
+      'lead.name': 'Full name',
+      'lead.phone': 'Phone / WhatsApp',
+      'lead.email': 'Email (optional)',
+      'lead.package': 'Which pack interests you?',
+      'lead.select': '— Select —',
+      'lead.opt1': 'Starter (Rs 9,000)',
+      'lead.opt2': 'Pro (Rs 19,000)',
+      'lead.opt3': 'E-commerce (Rs 35,000)',
+      'lead.opt4': 'Custom quote',
+      'lead.message': 'Describe your project (optional)',
+      'lead.submit': 'Send my request',
+      'lead.note': '🔒 Your info stays confidential. No spam.',
 
       'about.eyebrow': 'About',
       'about.title1': 'The web studio that speaks',
@@ -372,10 +494,83 @@
   function trackWhatsApp() {
     document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
       link.addEventListener('click', () => {
-        // Hook for analytics (Google Analytics / Meta Pixel) when added
-        if (window.fbq) window.fbq('track', 'Contact');
-        if (window.gtag) window.gtag('event', 'whatsapp_click', { event_category: 'engagement' });
+        // Meta Pixel
+        if (window.fbq) {
+          window.fbq('track', 'Contact');
+          window.fbq('trackCustom', 'WhatsAppClick', { source: link.href });
+        }
+        // Google Analytics 4
+        if (window.gtag) {
+          window.gtag('event', 'whatsapp_click', {
+            event_category: 'engagement',
+            event_label: link.href
+          });
+        }
+        // TikTok
+        if (window.ttq) window.ttq.track('Contact');
       });
+    });
+  }
+
+  /* ----- PROMO BANNER ----- */
+  function setupPromoBanner() {
+    const banner = document.getElementById('promoBanner');
+    const closeBtn = document.getElementById('promoClose');
+    if (!banner || !closeBtn) return;
+
+    const dismissed = localStorage.getItem('webnova-promo-dismissed');
+    if (dismissed) {
+      banner.classList.add('hidden');
+      return;
+    }
+    document.body.classList.add('has-promo');
+
+    closeBtn.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      document.body.classList.remove('has-promo');
+      localStorage.setItem('webnova-promo-dismissed', '1');
+    });
+  }
+
+  /* ----- LEAD FORM ----- */
+  function setupLeadForm() {
+    const form = document.getElementById('leadForm');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const name = data.get('name') || '';
+      const phone = data.get('phone') || '';
+      const email = data.get('email') || '';
+      const pkg = data.get('package') || '';
+      const message = data.get('message') || '';
+
+      // Track conversion
+      if (window.fbq) window.fbq('track', 'Lead', { content_name: pkg });
+      if (window.gtag) window.gtag('event', 'generate_lead', { value: pkg });
+      if (window.ttq) window.ttq.track('SubmitForm');
+
+      // Build WhatsApp message and redirect
+      const text = `Bonjour WebNova ! Je veux un devis :%0A%0A` +
+        `👤 Nom : ${encodeURIComponent(name)}%0A` +
+        `📞 Tél : ${encodeURIComponent(phone)}%0A` +
+        (email ? `📧 Email : ${encodeURIComponent(email)}%0A` : '') +
+        `📦 Pack : ${encodeURIComponent(pkg)}%0A` +
+        (message ? `📝 Projet : ${encodeURIComponent(message)}%0A` : '') +
+        `%0AMerci !`;
+
+      const whatsappUrl = `https://wa.me/23058574757?text=${text}`;
+      window.open(whatsappUrl, '_blank');
+
+      // Show confirmation
+      form.innerHTML = `
+        <div style="text-align:center; padding:40px 20px;">
+          <div style="font-size:48px; margin-bottom:16px;">✅</div>
+          <h3 style="margin-bottom:12px; color:var(--text-primary);">Demande envoyée !</h3>
+          <p style="color:var(--text-secondary);">Vous allez être redirigé vers WhatsApp pour finaliser votre demande. Je vous réponds dans l'heure !</p>
+        </div>
+      `;
     });
   }
 
@@ -388,6 +583,8 @@
     setupLangSwitch();
     setupYear();
     trackWhatsApp();
+    setupPromoBanner();
+    setupLeadForm();
 
     // Scroll listener
     window.addEventListener('scroll', handleScroll, { passive: true });
