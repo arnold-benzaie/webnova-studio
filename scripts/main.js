@@ -23,7 +23,7 @@
       'nav.cta': 'Demander un devis',
 
       'promo.tag': 'OFFRE DE LANCEMENT',
-      'promo.text': ' · Site web professionnel à Rs 9,000 seulement · Livraison 48h',
+      'promo.text': ' · Site web professionnel à Rs 7,500 seulement · Livraison 48h',
       'promo.cta': "J'en profite",
 
       'hero.badge': 'Agence web certifiée à Maurice',
@@ -123,7 +123,7 @@
       'faq.eyebrow': 'Questions fréquentes',
       'faq.title': 'Tout ce que vous voulez savoir',
       'faq.q1': 'Combien coûte un site web à Maurice ?',
-      'faq.a1': 'Nos sites commencent à Rs 9,000 pour un site one-page professionnel. Le pack Pro à Rs 19,000 inclut jusqu\'à 5 pages, et l\'e-commerce démarre à Rs 35,000. Tous les prix sont transparents, sans frais cachés.',
+      'faq.a1': 'Nos sites commencent à Rs 7,500 pour un site one-page professionnel. Le pack Pro à Rs 15,000 inclut jusqu\'à 5 pages, et l\'e-commerce démarre à Rs 29,000. Tous les prix sont transparents, sans frais cachés.',
       'faq.q2': 'Combien de temps pour créer mon site ?',
       'faq.a2': 'Pour un site Starter (one-page) : 48h après validation de la maquette. Pour un site Pro multi-pages : 5-7 jours. Pour un e-commerce complet : 2-3 semaines. Délais express disponibles sur demande.',
       'faq.q3': "L'hébergement et le domaine sont-ils inclus ?",
@@ -152,9 +152,9 @@
       'lead.email': 'Email (optionnel)',
       'lead.package': 'Quel pack vous intéresse ?',
       'lead.select': '— Sélectionnez —',
-      'lead.opt1': 'Starter (Rs 9,000)',
-      'lead.opt2': 'Pro (Rs 19,000)',
-      'lead.opt3': 'E-commerce (Rs 35,000)',
+      'lead.opt1': 'Starter (Rs 7,500)',
+      'lead.opt2': 'Pro (Rs 15,000)',
+      'lead.opt3': 'E-commerce (Rs 29,000)',
       'lead.opt4': 'Devis personnalisé',
       'lead.message': 'Décrivez votre projet (optionnel)',
       'lead.submit': 'Envoyer ma demande',
@@ -203,7 +203,7 @@
       'nav.cta': 'Get a quote',
 
       'promo.tag': 'LAUNCH OFFER',
-      'promo.text': ' · Professional website for only Rs 9,000 · 48h delivery',
+      'promo.text': ' · Professional website for only Rs 7,500 · 48h delivery',
       'promo.cta': 'Get this deal',
 
       'hero.badge': 'Certified web agency in Mauritius',
@@ -303,7 +303,7 @@
       'faq.eyebrow': 'Frequently asked questions',
       'faq.title': 'Everything you want to know',
       'faq.q1': 'How much does a website cost in Mauritius?',
-      'faq.a1': 'Our sites start at Rs 9,000 for a professional one-page site. The Pro pack at Rs 19,000 includes up to 5 pages, and e-commerce starts at Rs 35,000. All prices are transparent, no hidden fees.',
+      'faq.a1': 'Our sites start at Rs 7,500 for a professional one-page site. The Pro pack at Rs 15,000 includes up to 5 pages, and e-commerce starts at Rs 29,000. All prices are transparent, no hidden fees.',
       'faq.q2': 'How long does it take to create my site?',
       'faq.a2': 'For a Starter site (one-page): 48h after mockup validation. For a Pro multi-page site: 5-7 days. For a full e-commerce: 2-3 weeks. Express delivery available on request.',
       'faq.q3': 'Are hosting and domain included?',
@@ -332,9 +332,9 @@
       'lead.email': 'Email (optional)',
       'lead.package': 'Which pack interests you?',
       'lead.select': '— Select —',
-      'lead.opt1': 'Starter (Rs 9,000)',
-      'lead.opt2': 'Pro (Rs 19,000)',
-      'lead.opt3': 'E-commerce (Rs 35,000)',
+      'lead.opt1': 'Starter (Rs 7,500)',
+      'lead.opt2': 'Pro (Rs 15,000)',
+      'lead.opt3': 'E-commerce (Rs 29,000)',
       'lead.opt4': 'Custom quote',
       'lead.message': 'Describe your project (optional)',
       'lead.submit': 'Send my request',
@@ -399,9 +399,9 @@
 
     // Update title
     if (lang === 'en') {
-      document.title = 'WebNova Studio — Professional Website Creation in Mauritius | Rs 9,000';
+      document.title = 'WebNova Studio — Professional Website Creation in Mauritius | Rs 7,500';
     } else {
-      document.title = 'WebNova Studio — Création de Sites Web Professionnels à Maurice | Rs 9,000';
+      document.title = 'WebNova Studio — Création de Sites Web Professionnels à Maurice | Rs 7,500';
     }
   }
 
