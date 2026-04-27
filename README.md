@@ -5,7 +5,7 @@
 
 🌐 **Live:** [webnova.mu](https://webnova.mu)
 💬 **WhatsApp:** [+230 5857 4757](https://wa.me/23058574757)
-📧 **Email:** hello@webnova.mu
+📧 **Email:** hello@webnova.company
 
 ---
 
@@ -158,7 +158,7 @@ open http://localhost:8000
 ## 📞 Contact
 
 - **WhatsApp:** +230 5857 4757
-- **Email:** hello@webnova.mu
+- **Email:** hello@webnova.company
 - **Facebook:** [WebNova Studio.mu](https://www.facebook.com/profile.php?id=61580773148555)
 
 ---
