@@ -164,3 +164,4 @@ open http://localhost:8000
 ---
 
 © 2026 WebNova Studio · Conçu avec ❤️ à Maurice
+Testing Jira integration TA-7
