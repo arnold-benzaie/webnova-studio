@@ -173,7 +173,7 @@
       </div>
       <header class="site-nav" id="siteNav">
         <div class="shell nav-row">
-          <a class="brand" href="index.html" aria-label="WebNova Marketplace — Accueil">${logo()}</a>
+          <a class="brand" href="index.html">${logo()}</a>
           <nav class="desktop-nav" aria-label="Navigation principale">
             <a href="catalogue.html" ${page === 'catalogue' ? 'aria-current="page"' : ''}>${t('catalogue')}</a>
             <a href="categories.html" ${page === 'categories' ? 'aria-current="page"' : ''}>${t('categories')}</a>
@@ -188,8 +188,8 @@
             </div>
             <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="${activeTheme === 'white' ? tr('Activer le thème bleu nuit', 'Switch to midnight theme') : tr('Activer le thème blanc', 'Switch to white theme')}" aria-pressed="${activeTheme === 'white'}"><span aria-hidden="true">${activeTheme === 'white' ? '☾' : '☀'}</span></button>
             <button class="icon-button search-button" type="button" data-open-search aria-label="${t('search')}"><span aria-hidden="true">⌕</span></button>
-            <a class="icon-button" href="wishlist.html" aria-label="Liste de souhaits"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count>0</span></a>
-            <a class="icon-button" href="panier.html" aria-label="Panier"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count>0</span></a>
+            <a class="icon-button" href="wishlist.html" aria-label="Liste de souhaits"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count aria-hidden="true">0</span></a>
+            <a class="icon-button" href="panier.html" aria-label="Panier"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count aria-hidden="true">0</span></a>
             <a class="account-link" href="account.html"><span class="account-avatar">◎</span><span>${t('account')}</span></a>
             <button class="mobile-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
           </div>
