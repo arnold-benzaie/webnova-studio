@@ -15,7 +15,7 @@ const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
 </section>`;
 
 function prepareHtml(source) {
-  return source
+  let output = source
     .replace(
       /<link href="(https:\/\/fonts\.googleapis\.com\/[^"]+)" rel="stylesheet">/,
       '<link href="$1" rel="stylesheet" media="print" onload="this.media=\'all\'">\n  <noscript><link href="$1" rel="stylesheet"></noscript>'
@@ -32,6 +32,21 @@ function prepareHtml(source) {
       '<main id="pageContent"></main>',
       `<main id="pageContent">${bootFallback}</main>`
     );
+
+  const title = output.match(/<title>([^<]+)<\/title>/)?.[1] || 'WebNova Marketplace';
+  const description = output.match(/<meta name="description" content="([^"]*)">/)?.[1] || 'Ressources numériques premium WebNova.';
+  const canonical = output.match(/<link rel="canonical" href="([^"]+)">/)?.[1] || 'https://webnova.company/';
+  if (!output.includes('property="og:title"')) {
+    const socialMetadata = `
+  <meta property="og:type" content="website"><meta property="og:site_name" content="WebNova Marketplace">
+  <meta property="og:title" content="${title}"><meta property="og:description" content="${description}">
+  <meta property="og:url" content="${canonical}"><meta property="og:image" content="https://webnova.company/assets/og-webnova-v2.jpg">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${description}"><meta name="twitter:image" content="https://webnova.company/assets/og-webnova-v2.jpg">
+  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'WebNova Marketplace', url: 'https://webnova.company/' } })}</script>`;
+    output = output.replace('</head>', `${socialMetadata}\n</head>`);
+  }
+  return output;
 }
 
 fs.rmSync(dist, { recursive: true, force: true });

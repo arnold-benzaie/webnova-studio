@@ -9,6 +9,7 @@ const requiredPages = [
   'index.html', 'catalogue.html', 'product.html', 'categories.html', 'bundles.html',
   'academy.html', 'panier.html', 'checkout.html', 'account.html', 'orders.html',
   'downloads.html', 'licenses.html', 'invoices.html', 'faq.html',
+  'blog.html', 'support.html', 'roadmap.html',
   'refund-policy.html', 'license.html', 'terms.html', 'privacy.html'
 ];
 
@@ -33,7 +34,10 @@ const productsSource = fs.readFileSync(path.join(root, 'scripts/products.js'), '
 const productIds = [...productsSource.matchAll(/\bid:\s*'([^']+)'/g)].map((match) => match[1]);
 const duplicateIds = productIds.filter((id, index) => productIds.indexOf(id) !== index);
 if (duplicateIds.length) errors.push(`IDs produits dupliqués: ${[...new Set(duplicateIds)].join(', ')}`);
-if (productIds.length < 30) errors.push(`Catalogue incomplet: ${productIds.length} produits seulement`);
+if (productIds.length < 50) errors.push(`Catalogue incomplet: ${productIds.length} produits seulement`);
+if (/rating:\s*(?!null\b)[0-9.]+/.test(productsSource)) errors.push('Notes produit non vérifiées détectées dans les données');
+if (/reviews:\s*[1-9]/.test(productsSource)) errors.push('Compteurs d’avis non vérifiés détectés dans les données');
+if (/sales:\s*[1-9]/.test(productsSource)) errors.push('Compteurs de ventes non vérifiés détectés dans les données');
 
 const storefrontSource = fs.readFileSync(path.join(root, 'scripts/main.js'), 'utf8');
 const forbiddenPublicClaims = ['aggregateRating', 'Achat vérifié', '1 500+', '4.9/5'];
@@ -41,12 +45,16 @@ for (const claim of forbiddenPublicClaims) {
   if (storefrontSource.includes(claim)) errors.push(`Affirmation publique non vérifiée détectée: ${claim}`);
 }
 
+for (const capability of ['languageSelect', 'currencySelect', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderSupport', 'renderRoadmap']) {
+  if (!storefrontSource.includes(capability)) errors.push(`Capacité marketplace manquante: ${capability}`);
+}
+
 for (const match of productsSource.matchAll(/cover:\s*'([^']+)'/g)) {
   if (!fs.existsSync(path.join(root, match[1]))) errors.push(`Couverture produit introuvable: ${match[1]}`);
 }
 
-if (!fs.existsSync(path.join(root, 'assets/og-webnova.png'))) {
-  errors.push('Carte de partage WebNova introuvable: assets/og-webnova.png');
+if (!fs.existsSync(path.join(root, 'assets/og-webnova-v2.jpg'))) {
+  errors.push('Carte de partage WebNova introuvable: assets/og-webnova-v2.jpg');
 }
 
 if (errors.length) {
