@@ -10,9 +10,9 @@ const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || '20260714').slice(0, 
 
 const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
   <span>WEBNOVA MARKETPLACE</span>
-  <h1>Ressources numériques premium</h1>
-  <p>La marketplace se charge. Si l’affichage tarde, vous pouvez ouvrir directement le catalogue.</p>
-  <a href="catalogue.html">Ouvrir le catalogue</a>
+  <h1>Premium digital resources</h1>
+  <p>The marketplace is loading. If the page takes longer than expected, open the catalogue directly.</p>
+  <a href="catalogue.html">Open the catalogue</a>
 </section>`;
 
 function prepareHtml(source) {
@@ -33,8 +33,8 @@ function prepareHtml(source) {
       `$1?v=${assetVersion}`
     )
     .replace(
-      '<main id="pageContent"><noscript><p class="shell">JavaScript doit être activé pour consulter le catalogue WebNova.</p></noscript></main>',
-      `<main id="pageContent">${bootFallback}<noscript><p class="shell">JavaScript doit être activé pour consulter le catalogue WebNova.</p></noscript></main>`
+      '<main id="pageContent"><noscript><p class="shell">JavaScript must be enabled to browse the WebNova catalogue.</p></noscript></main>',
+      `<main id="pageContent">${bootFallback}<noscript><p class="shell">JavaScript must be enabled to browse the WebNova catalogue.</p></noscript></main>`
     )
     .replace(
       '<main id="pageContent"></main>',
@@ -42,7 +42,7 @@ function prepareHtml(source) {
     );
 
   const title = output.match(/<title>([^<]+)<\/title>/)?.[1] || 'WebNova Marketplace';
-  const description = output.match(/<meta name="description" content="([^"]*)">/)?.[1] || 'Ressources numériques premium WebNova.';
+  const description = output.match(/<meta name="description" content="([^"]*)">/)?.[1] || 'Premium WebNova digital resources.';
   const canonical = output.match(/<link rel="canonical" href="([^"]+)">/)?.[1] || 'https://webnova.company/';
   if (!output.includes('property="og:title"')) {
     const socialMetadata = `
