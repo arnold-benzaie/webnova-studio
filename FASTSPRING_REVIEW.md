@@ -3,7 +3,7 @@
 ## Conclusion actuelle
 
 Ne pas présenter cette préversion à FastSpring pour activation commerciale.
-L’interface est avancée, mais les 44 fiches du catalogue ne deviennent de vrais
+L’interface est avancée, mais les 56 fiches du catalogue ne deviennent de vrais
 produits que lorsque les fichiers, licences, prix et méthodes de livraison ont
 été produits et testés.
 

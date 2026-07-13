@@ -5,7 +5,7 @@ Plateforme premium de produits numériques développée pour WebNova Studio.
 ## Expérience disponible
 
 - page d’accueil marketplace ;
-- catalogue de 44 fiches produit avec recherche, filtres, tri et catégories ;
+- catalogue de 56 fiches produit avec recherche, filtres, tri et catégories ;
 - fiches produit avec galerie, aperçu, caractéristiques, avis et recommandations ;
 - Bundles Premium et WebNova Academy ;
 - panier et wishlist conservés sur l’appareil ;
