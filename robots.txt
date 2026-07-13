@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /checkout.html
+Disallow: /account.html
+Disallow: /orders.html
+Disallow: /downloads.html
+Disallow: /licenses.html
+Disallow: /invoices.html
+Disallow: /panier.html
+Disallow: /wishlist.html
 
-Sitemap: https://webnova.mu/sitemap.xml
+Sitemap: https://webnova.company/sitemap.xml
