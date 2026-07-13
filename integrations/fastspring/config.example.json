@@ -1,0 +1,21 @@
+{
+  "enabled": false,
+  "mode": "test",
+  "defaultLocale": "en",
+  "defaultCurrency": "USD",
+  "storefrontUrl": "YOUR_STORE.test.onfastspring.com/popup-checkout",
+  "productPathPrefix": "webnova-",
+  "signatureHeader": "x-fs-signature",
+  "webhookEvents": [
+    "order.completed",
+    "order.failed",
+    "order.canceled",
+    "fulfillment.failed",
+    "return.created"
+  ],
+  "secrets": {
+    "webhookHmac": "SERVER_ENV_ONLY",
+    "apiCredentials": "SERVER_ENV_ONLY",
+    "storeBuilderAccessKey": "SERVER_ENV_ONLY"
+  }
+}

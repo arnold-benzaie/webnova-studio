@@ -9,53 +9,54 @@
   const { products, categoryGroups, collections, commerce } = data;
   const page = document.body.dataset.page || 'home';
   const params = new URLSearchParams(window.location.search);
-  const language = readStore('webnova-language', 'fr');
-  const selectedCurrency = readStore('webnova-currency', 'MUR');
-  const locales = { fr: 'fr-FR', en: 'en-CA', es: 'es-ES', pt: 'pt-PT' };
+  const language = readStore('webnova-language-v2', 'en');
+  const selectedCurrency = readStore('webnova-currency-v2', 'USD');
+  const locales = { en: 'en-US', fr: 'fr-FR', es: 'es-ES', pt: 'pt-PT' };
   const currencies = {
+    USD: { rate: 0.0209, label: 'USD $' },
     CAD: { rate: 0.0281, label: 'CAD $' },
     EUR: { rate: 0.0183, label: 'EUR €' },
-    USD: { rate: 0.0209, label: 'USD $' },
     MUR: { rate: 1, label: 'MUR Rs' }
   };
   const messages = {
     fr: {
-      announcement: 'Préversion : catalogue numérique en cours de finalisation', discover: 'Découvrir les produits préparés',
+      announcement: 'Marketplace de ressources numériques · ouverture commerciale après validation', discover: 'Explorer les 56 ressources',
       catalogue: 'Catalogue', categories: 'Catégories', bundles: 'Bundles', academy: 'Academy', blog: 'Blog', account: 'Mon compte', search: 'Rechercher',
       heroKicker: 'Ressources numériques premium', heroTitle: 'Les meilleurs outils pour', heroAccent: 'créer, automatiser et grandir.',
       heroText: 'Templates professionnels, automatisations, prompts IA et formations pratiques. Explorez un catalogue international conçu avec transparence.',
-      searchPlaceholder: 'Décrivez ce que vous cherchez…', secure: 'Paiement sécurisé à activer', instant: 'Téléchargement instantané prévu',
-      license: 'Licence commerciale prévue', updates: 'Mises à jour selon le produit', support: 'Support humain disponible'
+      searchPlaceholder: 'Décrivez ce que vous cherchez…', secure: 'Architecture de paiement sécurisé', instant: 'Livraison numérique à l’ouverture',
+      license: 'Licence commerciale détaillée', updates: 'Mises à jour selon le produit', support: 'Support humain disponible'
     },
     en: {
-      announcement: 'Preview: digital catalogue currently being finalized', discover: 'Explore prepared products',
+      announcement: 'Digital resource marketplace · commercial opening after validation', discover: 'Explore 56 resources',
       catalogue: 'Marketplace', categories: 'Categories', bundles: 'Bundles', academy: 'Academy', blog: 'Blog', account: 'My account', search: 'Search',
       heroKicker: 'Premium digital resources', heroTitle: 'The best tools to', heroAccent: 'create, automate and grow.',
       heroText: 'Professional templates, automations, AI prompts and practical courses. Explore a transparent marketplace built for international customers.',
-      searchPlaceholder: 'Describe what you are looking for…', secure: 'Secure checkout to be activated', instant: 'Instant delivery planned',
-      license: 'Commercial licence planned', updates: 'Updates vary by product', support: 'Human support available'
+      searchPlaceholder: 'Describe what you are looking for…', secure: 'Secure payment architecture', instant: 'Digital delivery at launch',
+      license: 'Detailed commercial licence', updates: 'Updates vary by product', support: 'Human support available'
     },
     es: {
-      announcement: 'Vista previa: catálogo digital en fase de finalización', discover: 'Explorar los productos preparados',
+      announcement: 'Marketplace de recursos digitales · apertura tras validación', discover: 'Explorar 56 recursos',
       catalogue: 'Catálogo', categories: 'Categorías', bundles: 'Paquetes', academy: 'Academy', blog: 'Blog', account: 'Mi cuenta', search: 'Buscar',
       heroKicker: 'Recursos digitales premium', heroTitle: 'Las mejores herramientas para', heroAccent: 'crear, automatizar y crecer.',
       heroText: 'Plantillas profesionales, automatizaciones, prompts de IA y cursos prácticos. Explora un catálogo internacional y transparente.',
-      searchPlaceholder: 'Describe lo que estás buscando…', secure: 'Pago seguro por activar', instant: 'Entrega instantánea prevista',
-      license: 'Licencia comercial prevista', updates: 'Actualizaciones según el producto', support: 'Soporte humano disponible'
+      searchPlaceholder: 'Describe lo que estás buscando…', secure: 'Arquitectura de pago seguro', instant: 'Entrega digital al lanzamiento',
+      license: 'Licencia comercial detallada', updates: 'Actualizaciones según el producto', support: 'Soporte humano disponible'
     },
     pt: {
-      announcement: 'Pré-visualização: catálogo digital em fase de finalização', discover: 'Explorar os produtos preparados',
+      announcement: 'Marketplace de recursos digitais · abertura após validação', discover: 'Explorar 56 recursos',
       catalogue: 'Catálogo', categories: 'Categorias', bundles: 'Pacotes', academy: 'Academy', blog: 'Blog', account: 'Minha conta', search: 'Pesquisar',
       heroKicker: 'Recursos digitais premium', heroTitle: 'As melhores ferramentas para', heroAccent: 'criar, automatizar e crescer.',
       heroText: 'Templates profissionais, automações, prompts de IA e cursos práticos. Explore um catálogo internacional construído com transparência.',
-      searchPlaceholder: 'Descreva o que procura…', secure: 'Pagamento seguro por ativar', instant: 'Entrega instantânea prevista',
-      license: 'Licença comercial prevista', updates: 'Atualizações conforme o produto', support: 'Suporte humano disponível'
+      searchPlaceholder: 'Descreva o que procura…', secure: 'Arquitetura de pagamento seguro', instant: 'Entrega digital no lançamento',
+      license: 'Licença comercial detalhada', updates: 'Atualizações conforme o produto', support: 'Suporte humano disponível'
     }
   };
-  const t = (key) => (messages[language] || messages.fr)[key] || messages.fr[key] || key;
+  const t = (key) => (messages[language] || messages.en)[key] || messages.en[key] || key;
+  const tr = (fr, en) => language === 'en' ? en : fr;
   document.documentElement.lang = language;
-  const currencyConfig = currencies[selectedCurrency] || currencies.MUR;
-  const currency = new Intl.NumberFormat(locales[language] || 'fr-FR', {
+  const currencyConfig = currencies[selectedCurrency] || currencies.USD;
+  const currency = new Intl.NumberFormat(locales[language] || 'en-US', {
     style: 'currency', currency: selectedCurrency, maximumFractionDigits: selectedCurrency === 'MUR' ? 0 : 2
   });
 
@@ -63,6 +64,16 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const formatPrice = (value) => currency.format(value * currencyConfig.rate).replace('MUR', 'Rs');
   const findProduct = (id) => products.find((product) => product.id === id);
+
+  function setMeta(attribute, key, content) {
+    let meta = document.head.querySelector(`meta[${attribute}="${key}"]`);
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute(attribute, key);
+      document.head.appendChild(meta);
+    }
+    meta.content = content;
+  }
   const searchAliases = {
     restaurant: ['restaurant', 'cafe', 'menu', 'reservation', 'booking', 'food'],
     seo: ['seo', 'referencement', 'audit', 'mots-cles', 'search'],
@@ -134,6 +145,7 @@
     const target = $('#siteHeader');
     if (!target) return;
     target.innerHTML = `
+      <a class="skip-link" href="#pageContent">Aller au contenu principal</a>
       <div class="announcement">
         <div class="shell announcement-inner">
           <span>${t('announcement')}</span>
@@ -152,13 +164,13 @@
           </nav>
           <div class="nav-actions">
             <div class="locale-controls" aria-label="Langue et devise">
-              <label><span class="sr-only">Langue</span><select id="languageSelect" aria-label="Langue"><option value="fr" ${language === 'fr' ? 'selected' : ''}>FR</option><option value="en" ${language === 'en' ? 'selected' : ''}>EN</option><option value="es" ${language === 'es' ? 'selected' : ''}>ES</option><option value="pt" ${language === 'pt' ? 'selected' : ''}>PT</option></select></label>
+              <label><span class="sr-only">Language</span><select id="languageSelect" aria-label="Language"><option value="en" ${language === 'en' ? 'selected' : ''}>EN</option><option value="fr" ${language === 'fr' ? 'selected' : ''}>FR</option><option value="es" ${language === 'es' ? 'selected' : ''}>ES</option><option value="pt" ${language === 'pt' ? 'selected' : ''}>PT</option></select></label>
               <label><span class="sr-only">Devise</span><select id="currencySelect" aria-label="Devise">${Object.entries(currencies).map(([code, config]) => `<option value="${code}" ${selectedCurrency === code ? 'selected' : ''}>${config.label}</option>`).join('')}</select></label>
             </div>
             <button class="icon-button search-button" type="button" data-open-search aria-label="${t('search')}"><span aria-hidden="true">⌕</span></button>
             <a class="icon-button" href="wishlist.html" aria-label="Liste de souhaits"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count>0</span></a>
             <a class="icon-button" href="panier.html" aria-label="Panier"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count>0</span></a>
-            <a class="account-link" href="account.html"><span class="account-avatar">AB</span><span>${t('account')}</span></a>
+            <a class="account-link" href="account.html"><span class="account-avatar">◎</span><span>${t('account')}</span></a>
             <button class="mobile-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
           </div>
         </div>
@@ -172,7 +184,7 @@
           <a href="orders.html">Mes commandes</a>
           <a href="licenses.html">Mes licences</a>
           <a href="invoices.html">Mes factures</a>
-          <div class="mobile-settings"><label>Langue<select class="js-language-select"><option value="fr" ${language === 'fr' ? 'selected' : ''}>Français</option><option value="en" ${language === 'en' ? 'selected' : ''}>English</option><option value="es" ${language === 'es' ? 'selected' : ''}>Español</option><option value="pt" ${language === 'pt' ? 'selected' : ''}>Português</option></select></label><label>Devise<select class="js-currency-select">${Object.entries(currencies).map(([code, config]) => `<option value="${code}" ${selectedCurrency === code ? 'selected' : ''}>${config.label}</option>`).join('')}</select></label></div>
+          <div class="mobile-settings"><label>Language<select class="js-language-select"><option value="en" ${language === 'en' ? 'selected' : ''}>English</option><option value="fr" ${language === 'fr' ? 'selected' : ''}>Français</option><option value="es" ${language === 'es' ? 'selected' : ''}>Español</option><option value="pt" ${language === 'pt' ? 'selected' : ''}>Português</option></select></label><label>Currency<select class="js-currency-select">${Object.entries(currencies).map(([code, config]) => `<option value="${code}" ${selectedCurrency === code ? 'selected' : ''}>${config.label}</option>`).join('')}</select></label></div>
         </nav>
       </header>
       <div class="search-overlay" id="searchOverlay" aria-hidden="true">
@@ -181,9 +193,9 @@
             <div><span class="eyebrow">Recherche globale</span><h2 id="searchTitle">Que recherchez-vous ?</h2></div>
             <button class="icon-button" type="button" data-close-search aria-label="Fermer">×</button>
           </div>
-          <label class="global-search-field"><span aria-hidden="true">⌕</span><input id="globalSearchInput" type="search" placeholder="${t('searchPlaceholder')}" autocomplete="off"></label>
+          <label class="global-search-field"><span aria-hidden="true">⌕</span><input id="globalSearchInput" type="search" placeholder="${t('searchPlaceholder')}" autocomplete="off" aria-controls="globalSearchResults" aria-autocomplete="list"></label>
           <div class="quick-searches"><span>Populaire :</span><button data-search-term="Restaurant">Restaurant</button><button data-search-term="n8n">n8n</button><button data-search-term="SEO">SEO</button><button data-search-term="IA">IA</button></div>
-          <div id="globalSearchResults" class="search-results"></div>
+          <div id="globalSearchResults" class="search-results" role="listbox" aria-live="polite"></div>
         </div>
       </div>`;
   }
@@ -195,21 +207,21 @@
       <section class="newsletter-strip">
         <div class="shell newsletter-inner">
           <div><span class="eyebrow">WebNova Insider</span><h2>Une ressource premium dans votre boîte mail.</h2><p>Nouveautés, guides et offres réservées à notre communauté.</p></div>
-          <form class="newsletter-form" data-demo-form><input type="email" required placeholder="vous@entreprise.com" aria-label="Votre adresse email"><button class="btn btn-primary" type="submit">Je m’inscris</button></form>
+          <a class="btn btn-primary newsletter-cta" href="mailto:hello@webnova.company?subject=Inscription%20WebNova%20Insider">Recevoir les nouveautés</a>
         </div>
       </section>
       <footer class="footer">
         <div class="shell footer-grid">
-          <div class="footer-brand"><a class="brand" href="index.html">${logo()}</a><p>Ressources numériques premium, formations et automatisations pour construire, promouvoir et développer votre activité.</p><div class="footer-badges"><span>Checkout en préparation</span><span>Livraison automatique prévue</span><span>Support humain</span></div></div>
+          <div class="footer-brand"><a class="brand" href="index.html">${logo()}</a><p>Ressources numériques premium, formations et automatisations pour construire, promouvoir et développer votre activité.</p><div class="footer-badges"><span>Architecture FastSpring-ready</span><span>Livraison sécurisée à l’ouverture</span><span>Support humain disponible</span></div></div>
           <div><h3>Marketplace</h3><a href="catalogue.html">Tous les produits</a><a href="categories.html">Catégories</a><a href="bundles.html">Bundles Premium</a><a href="academy.html">WebNova Academy</a><a href="blog.html">Blog & tutoriels</a></div>
-          <div><h3>Ressources</h3><a href="support.html">Centre d’aide</a><a href="faq.html">Documentation</a><a href="roadmap.html">Roadmap</a><a href="roadmap.html#api">API — en préparation</a><a href="https://github.com/arnold-benzaie/webnova-studio" target="_blank" rel="noopener">GitHub</a></div>
+          <div><h3>Ressources</h3><a href="support.html">Centre d’aide</a><a href="faq.html">Documentation</a><a href="roadmap.html">Roadmap</a><a href="blog.html">Guides pratiques</a><a href="https://github.com/arnold-benzaie/webnova-studio" target="_blank" rel="noopener">GitHub</a></div>
           <div><h3>Mon espace</h3><a href="account.html">Mon compte</a><a href="orders.html">Mes commandes</a><a href="downloads.html">Téléchargements</a><a href="licenses.html">Mes licences</a><a href="invoices.html">Mes factures</a><a href="wishlist.html">Wishlist</a></div>
           <div><h3>Aide & légal</h3><a href="faq.html">Questions fréquentes</a><a href="refund-policy.html">Remboursements</a><a href="license.html">Licence d’utilisation</a><a href="terms.html">Conditions de vente</a><a href="privacy.html">Confidentialité</a></div>
-          <div><h3>Communauté</h3><a href="roadmap.html#community">Discord — en préparation</a><a href="roadmap.html#community">LinkedIn — en préparation</a><a href="roadmap.html#community">YouTube — en préparation</a><a href="mailto:hello@webnova.company">Email</a><a href="https://wa.me/23058574757" target="_blank" rel="noopener">WhatsApp</a></div>
+          <div><h3>Nous suivre</h3><a href="blog.html">WebNova Insights</a><a href="roadmap.html">Roadmap publique</a><a href="https://github.com/arnold-benzaie/webnova-studio" target="_blank" rel="noopener">GitHub</a><a href="mailto:hello@webnova.company">Email</a><a href="https://wa.me/23058574757" target="_blank" rel="noopener">WhatsApp</a></div>
         </div>
         <div class="shell footer-bottom"><span>© 2026 WebNova Studio. Tous droits réservés.</span><span>Digital · Innovation · Mauritius</span><a href="https://wa.me/23058574757" target="_blank" rel="noopener">Support WhatsApp : +230 5857 4757</a></div>
       </footer>
-      <div class="support-widget"><button class="support-fab" type="button" data-toggle-support aria-expanded="false" aria-controls="supportPanel"><span>✦</span><b>Support</b></button><div class="support-panel" id="supportPanel" hidden><div><span>Centre d’aide WebNova</span><button type="button" data-toggle-support aria-label="Fermer">×</button></div><p>Choisissez le canal qui vous convient. Aucun chatbot ne simule une réponse humaine.</p><a href="https://wa.me/23058574757" target="_blank" rel="noopener"><b>WhatsApp</b><small>Écrire à l’équipe WebNova</small></a><a href="mailto:hello@webnova.company"><b>Email</b><small>hello@webnova.company</small></a><a href="faq.html"><b>FAQ</b><small>Réponses immédiates</small></a><a href="support.html"><b>Centre d’aide</b><small>Tous les canaux de support</small></a></div></div>
+      <div class="support-widget"><button class="support-fab" type="button" data-toggle-support aria-expanded="false" aria-controls="supportPanel"><span>✦</span><b>Support</b></button><div class="support-panel" id="supportPanel" hidden><div><span>Centre d’aide WebNova</span><button type="button" data-toggle-support aria-label="Fermer">×</button></div><p>Choisissez votre canal et échangez directement avec l’équipe WebNova.</p><a href="https://wa.me/23058574757" target="_blank" rel="noopener"><b>WhatsApp</b><small>Écrire à l’équipe WebNova</small></a><a href="mailto:hello@webnova.company"><b>Email</b><small>hello@webnova.company</small></a><a href="faq.html"><b>FAQ</b><small>Réponses immédiates</small></a><a href="support.html"><b>Centre d’aide</b><small>Tous les canaux de support</small></a></div></div>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
   }
 
@@ -230,18 +242,14 @@
       </div>`;
   }
 
-  function stars(rating) {
-    return `<span class="stars" aria-label="Note ${rating} sur 5">★★★★★</span>`;
-  }
-
   function publicBadge(product) {
     if (product.badge === 'Meilleure vente') return 'Sélection WebNova';
-    if (product.badge.startsWith('Économisez')) return 'Bundle en préparation';
+    if (product.badge.startsWith('Économisez')) return 'Bundle Premium';
     return product.badge;
   }
 
   function reviewStatus() {
-    return '<span class="review-pending">☆ Nouveau sur WebNova · avis vérifiés après le lancement</span>';
+    return `<span class="review-pending" title="${tr('Les avis seront publiés uniquement après des commandes vérifiées', 'Reviews will only be published after verified orders')}">☆ ${tr('Aucun avis publié', 'No reviews published')}</span>`;
   }
 
   function productCard(product, compact = false) {
@@ -249,17 +257,17 @@
     return `
       <article class="product-card ${compact ? 'product-card-compact' : ''}" data-product-id="${product.id}">
         <div class="product-card-media">
-          <a href="product.html?id=${product.id}" aria-label="Voir ${product.title}">${productVisual(product)}</a>
+          <a href="product.html?id=${product.id}" aria-label="${tr('Voir', 'View')} ${product.title}">${productVisual(product)}</a>
           <span class="product-badge">${publicBadge(product)}</span>
-          <button class="wishlist-button js-wishlist ${wishlisted ? 'is-active' : ''}" type="button" data-id="${product.id}" aria-label="${wishlisted ? 'Retirer de' : 'Ajouter à'} la wishlist">${wishlisted ? '♥' : '♡'}</button>
-          <button class="quick-add js-add-cart" type="button" data-id="${product.id}">Ajouter au panier</button>
+          <button class="wishlist-button js-wishlist ${wishlisted ? 'is-active' : ''}" type="button" data-id="${product.id}" aria-label="${wishlisted ? tr('Retirer de la wishlist', 'Remove from wishlist') : tr('Ajouter à la wishlist', 'Add to wishlist')}">${wishlisted ? '♥' : '♡'}</button>
+          <button class="quick-add js-add-cart" type="button" data-id="${product.id}">${tr('Ajouter au panier', 'Add to cart')}</button>
         </div>
         <div class="product-card-body">
           <div class="product-meta"><span>${product.collection}</span><span>${product.type}</span></div>
           <h3><a href="product.html?id=${product.id}">${product.title}</a></h3>
           <p>${product.tagline}</p>
           <div class="rating-line">${reviewStatus()}</div>
-          <div class="price-line"><strong>${formatPrice(product.price)}</strong><small>Prix indicatif</small></div>
+          <div class="price-line"><strong>${formatPrice(product.price)}</strong><small>${tr('Prix indicatif', 'Indicative price')}</small></div>
         </div>
       </article>`;
   }
@@ -269,6 +277,19 @@
   }
 
   function breadcrumb(items) {
+    document.querySelector('script[data-webnova-schema="breadcrumb"]')?.remove();
+    const schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.dataset.webnovaSchema = 'breadcrumb';
+    schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ label: 'Accueil', href: 'index.html' }, ...items].map((item, index) => ({
+        '@type': 'ListItem', position: index + 1, name: item.label,
+        item: new URL(item.href || window.location.href, window.location.href).href
+      }))
+    });
+    document.head.appendChild(schema);
     return `<nav class="breadcrumb shell" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a>${items.map((item, index) => index === items.length - 1 ? `<span>${item.label}</span>` : `<a href="${item.href}">${item.label}</a>`).join('')}</nav>`;
   }
 
@@ -291,7 +312,7 @@
 
   function universeCard([title, icon, description, term]) {
     const count = products.filter((product) => `${product.title} ${product.category} ${product.collection} ${product.compatible}`.toLowerCase().includes(term.toLowerCase())).length;
-    return `<a class="universe-card" href="catalogue.html?search=${encodeURIComponent(term)}"><span>${icon}</span><div><h2>${title}</h2><p>${description}</p><small>${count ? `${count} fiche${count > 1 ? 's' : ''} correspondante${count > 1 ? 's' : ''}` : 'Collection en préparation'}</small></div><b>↗</b></a>`;
+    return `<a class="universe-card" href="catalogue.html?search=${encodeURIComponent(term)}"><span>${icon}</span><div><h2>${title}</h2><p>${description}</p><small>${count ? `${count} fiche${count > 1 ? 's' : ''} correspondante${count > 1 ? 's' : ''}` : 'Univers spécialisé'}</small></div><b>↗</b></a>`;
   }
 
   function renderHome() {
@@ -308,25 +329,25 @@
             <h1>${t('heroTitle')} <span>${t('heroAccent')}</span></h1>
             <p>${t('heroText')}</p>
             <form class="hero-search" action="catalogue.html"><span aria-hidden="true">⌕</span><input type="search" name="search" placeholder="${t('searchPlaceholder')}" aria-label="${t('search')}"><button type="submit">${t('search')}</button></form>
-            <div class="hero-pills"><span>Recherches populaires :</span><a href="catalogue.html?search=n8n">n8n</a><a href="catalogue.html?search=Restaurant">Restaurant</a><a href="catalogue.html?search=SEO">SEO</a><a href="catalogue.html?search=Prompts">Prompts IA</a></div>
+            <div class="hero-pills"><span>${tr('Recherches populaires :', 'Popular searches:')}</span><a href="catalogue.html?search=n8n">n8n</a><a href="catalogue.html?search=Restaurant">Restaurant</a><a href="catalogue.html?search=SEO">SEO</a><a href="catalogue.html?search=Prompts">${tr('Prompts IA', 'AI prompts')}</a></div>
             <div class="hero-benefits"><span>◇ ${t('secure')}</span><span>⚡ ${t('instant')}</span><span>✓ ${t('license')}</span><span>↻ ${t('updates')}</span><span>◎ ${t('support')}</span></div>
-            <div class="hero-proof"><div><strong>${products.length}</strong><span>fiches préparées</span></div><div><strong>16</strong><span>univers explorables</span></div><div><strong>22</strong><span>pages marketplace</span></div></div>
+            <div class="hero-proof"><div><strong>${products.length}</strong><span>${tr('fiches détaillées', 'detailed listings')}</span></div><div><strong>16</strong><span>${tr('univers spécialisés', 'specialist categories')}</span></div><div><strong>4</strong><span>${tr('langues disponibles', 'available languages')}</span></div></div>
           </div>
-          <div class="hero-showcase" aria-label="Sélection de produits WebNova">
+          <div class="hero-showcase" aria-label="${tr('Sélection de produits WebNova', 'Featured WebNova products')}">
             <div class="showcase-glow"></div>
-            <div class="showcase-card showcase-main">${productVisual(findProduct('ecommerce-aurora'), 'visual-hero')}<div class="showcase-product-info"><span>Nouveau · Template e-commerce</span><h2>Aurora Commerce</h2><strong>${formatPrice(3990)}</strong><small>Prix indicatif · avis après lancement</small><a class="btn btn-primary" href="product.html?id=ecommerce-aurora">Voir le produit</a></div></div>
-            <div class="floating-card floating-card-one"><span class="mini-icon">n8n</span><div><b>Lead Machine</b><small>Workflow prêt à importer</small></div></div>
-            <div class="floating-card floating-card-two"><span class="mini-icon">IA</span><div><b>Agent Support</b><small>Automatisation prévue</small></div></div>
-            <div class="floating-card floating-card-three"><span>✓</span> Livraison automatique prévue</div>
+            <div class="showcase-card showcase-main">${productVisual(findProduct('ecommerce-aurora'), 'visual-hero')}<div class="showcase-product-info"><span>${tr('Nouveau · Template e-commerce', 'New · E-commerce template')}</span><h2>Aurora Commerce</h2><strong>${formatPrice(3990)}</strong><small>${tr('Prix indicatif · avis après lancement', 'Indicative price · reviews after launch')}</small><a class="btn btn-primary" href="product.html?id=ecommerce-aurora">${tr('Voir le produit', 'View product')}</a></div></div>
+            <div class="floating-card floating-card-one"><span class="mini-icon">n8n</span><div><b>Lead Machine</b><small>${tr('Workflow prêt à importer', 'Import-ready workflow')}</small></div></div>
+            <div class="floating-card floating-card-two"><span class="mini-icon">AI</span><div><b>Support Agent</b><small>${tr('Architecture documentée', 'Documented architecture')}</small></div></div>
+            <div class="floating-card floating-card-three"><span>✓</span> ${tr('Livraison sécurisée à l’ouverture', 'Secure delivery at launch')}</div>
           </div>
         </div>
-        <div class="shell trust-row"><span>Conçu à Maurice, pensé pour le monde</span><span>◆ Catalogue en préparation</span><span>◆ Licence commerciale claire</span><span>◆ Support en français</span><span>◆ Produits standardisés</span></div>
+        <div class="shell trust-row"><span>${tr('Conçu à Maurice, pensé pour le monde', 'Built in Mauritius, designed for the world')}</span><span>◆ ${products.length} ${tr('fiches détaillées', 'detailed listings')}</span><span>◆ ${tr('Licence commerciale claire', 'Clear commercial licence')}</span><span>◆ ${tr('Support en français', 'English and French support')}</span><span>◆ ${tr('Produits standardisés', 'Standardised products')}</span></div>
       </section>
 
       <section class="compatibility-strip"><div class="shell"><div><span class="eyebrow">Compatibilité technique</span><p>Ces technologies sont compatibles avec certains produits. Cette liste ne constitue aucun partenariat officiel.</p></div><div class="compatibility-grid">${['Google Workspace','OpenAI','Anthropic','Claude','n8n','Airtable','Figma','GitHub','Supabase','Vercel','Notion','Cloudflare'].map((name) => `<span>${name}</span>`).join('')}</div></div></section>
 
       <section class="section section-tinted">
-        <div class="shell">${sectionHeading('Catalogue en préparation', 'Découvrez les premières ressources WebNova', 'Huit fiches détaillées sont présentées ici. Leur vente sera activée uniquement lorsque les fichiers et la livraison automatique auront été vérifiés.', `<a class="text-link" href="catalogue.html">Voir les ${products.length} fiches →</a>`)}<div class="product-grid">${best.map((product) => productCard(product)).join('')}</div></div>
+        <div class="shell">${sectionHeading('Sélection WebNova', 'Des ressources conçues pour passer à l’action', 'Explorez huit fiches détaillées et comparez formats, compatibilités, licences et contenus avant l’ouverture des ventes.', `<a class="text-link" href="catalogue.html">Voir les ${products.length} fiches →</a>`)}<div class="product-grid">${best.map((product) => productCard(product)).join('')}</div></div>
       </section>
 
       <section class="section category-section">
@@ -336,7 +357,7 @@
       <section class="section bundle-feature">
         <div class="shell bundle-feature-inner">
           <div class="bundle-art"><span class="bundle-orbit"></span><div class="bundle-box bundle-box-one">n8n</div><div class="bundle-box bundle-box-two">IA</div><div class="bundle-box bundle-box-three">CRM</div><div class="bundle-box bundle-box-four">+</div></div>
-          <div class="bundle-copy"><span class="eyebrow eyebrow-gold">Bundle Premium</span><h2>Automation & AI Bundle</h2><p>Quatre solutions complètes prévues pour automatiser vos leads, votre CRM et votre support client — avec la formation n8n incluse.</p><ul><li>n8n Lead Machine</li><li>Airtable CRM OS</li><li>Agent IA Support 24/7</li><li>Formation n8n Automation Builder</li></ul><div class="bundle-price"><strong>${formatPrice(8990)}</strong><span>Prix indicatif · en préparation</span></div><div class="button-row"><a class="btn btn-gold" href="product.html?id=bundle-automation">Découvrir le bundle</a><a class="btn btn-ghost" href="bundles.html">Tous les bundles</a></div></div>
+          <div class="bundle-copy"><span class="eyebrow eyebrow-gold">Bundle Premium</span><h2>Automation & AI Bundle</h2><p>Un ensemble cohérent pour structurer l’acquisition, le CRM et le support client, accompagné d’un parcours n8n.</p><ul><li>n8n Lead Machine</li><li>Airtable CRM OS</li><li>Agent IA Support 24/7</li><li>Formation n8n Automation Builder</li></ul><div class="bundle-price"><strong>${formatPrice(8990)}</strong><span>Tarif indicatif avant ouverture</span></div><div class="button-row"><a class="btn btn-gold" href="product.html?id=bundle-automation">Découvrir le bundle</a><a class="btn btn-ghost" href="bundles.html">Tous les bundles</a></div></div>
         </div>
       </section>
 
@@ -346,7 +367,7 @@
 
       <section class="section academy-home">
         <div class="shell">
-          <div class="academy-intro"><span class="eyebrow">WebNova Academy</span><h2>Apprenez une compétence.<br><span>Appliquez-la dans un projet.</span></h2><p>Huit parcours sont préparés autour de projets, ressources, quiz et certificats. Les vidéos et durées devront être validées avant la vente.</p><div class="academy-stats"><div><strong>8</strong><span>parcours préparés</span></div><div><strong>Projet</strong><span>pratique prévue</span></div><div><strong>Bientôt</strong><span>contenus à valider</span></div></div><a class="btn btn-primary" href="academy.html">Explorer l’Academy</a></div>
+          <div class="academy-intro"><span class="eyebrow">WebNova Academy</span><h2>Apprenez une compétence.<br><span>Appliquez-la dans un projet.</span></h2><p>Huit parcours structurés réunissent programme, projets, ressources, quiz et certificat. Les leçons vidéo seront publiées progressivement après validation éditoriale.</p><div class="academy-stats"><div><strong>8</strong><span>parcours structurés</span></div><div><strong>Projet</strong><span>application guidée</span></div><div><strong>4 étapes</strong><span>méthode pédagogique</span></div></div><a class="btn btn-primary" href="academy.html">Explorer l’Academy</a></div>
           <div class="academy-list">${academy.map((product, index) => `<a href="product.html?id=${product.id}" class="academy-row"><span class="course-number">0${index + 1}</span><span class="course-icon" style="--product-accent:${product.accent}">${product.icon}</span><span><b>${product.title}</b><small>${product.collection} · ${product.fileSize}</small></span><strong>${formatPrice(product.price)}</strong><i>→</i></a>`).join('')}</div>
         </div>
       </section>
@@ -355,13 +376,13 @@
         <div class="shell">${sectionHeading('Engagements WebNova', 'Des preuves avant des promesses', 'Les avis, ventes et téléchargements seront affichés seulement lorsqu’ils proviendront de commandes réelles vérifiées.')}<div class="testimonial-grid"><article><div class="commitment-icon">01</div><h3>Fichiers réellement livrables</h3><p>Chaque produit publié devra disposer de son fichier final, de sa documentation, de sa version et de sa compatibilité vérifiées.</p></article><article><div class="commitment-icon">02</div><h3>Checkout traçable</h3><p>Aucune commande ne sera confirmée depuis le navigateur seul. Le paiement et le statut de livraison seront validés côté serveur.</p></article><article><div class="commitment-icon">03</div><h3>Avis authentiques</h3><p>Les notes et témoignages seront rattachés à des achats réels. Aucun chiffre de démonstration ne sera présenté comme une preuve commerciale.</p></article></div></div>
       </section>
 
-      <section class="section why-webnova"><div class="shell">${sectionHeading('Pourquoi choisir WebNova', 'Une marketplace construite pour la confiance', 'Chaque engagement affiché correspond soit à une fonction déjà visible, soit à une capacité clairement indiquée comme étant en préparation.')}<div class="trust-feature-grid">${[
-        ['⚡','Livraison numérique','Architecture de livraison automatique prévue après validation serveur.'],
-        ['◇','Licence commerciale','Droits d’utilisation expliqués avant l’ouverture des ventes.'],
-        ['DOC','Documentation','Format, compatibilité et guide prévus sur chaque fiche.'],
+      <section class="section why-webnova"><div class="shell">${sectionHeading('Pourquoi acheter chez WebNova', 'Des informations claires avant chaque décision', 'Les capacités disponibles sont distinguées des fonctions qui seront activées au lancement commercial.')}<div class="trust-feature-grid">${[
+        ['⚡','Livraison numérique','Déclenchement automatique uniquement après confirmation serveur du paiement.'],
+        ['◇','Licence commerciale','Droits d’utilisation expliqués avant toute commande.'],
+        ['DOC','Documentation','Format, compatibilité et contenu détaillés sur chaque fiche.'],
         ['◎','Support','WhatsApp, email, FAQ et centre d’aide accessibles.'],
         ['✓','Compatibilité','Technologies compatibles indiquées produit par produit.'],
-        ['↻','Mises à jour','Durée prévue affichée sans promesse générale trompeuse.'],
+        ['↻','Mises à jour','Période annoncée produit par produit, sans promesse générale.'],
         ['♢','Sécurité','Aucune donnée bancaire complète stockée par WebNova.'],
         ['PAY','Paiement','Architecture préparée pour un Merchant of Record.']
       ].map(([icon,title,text]) => `<article><span>${icon}</span><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></div></section>
@@ -372,7 +393,7 @@
   function renderCatalogue() {
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Catalogue' }])}
-      <section class="page-hero compact-hero"><div class="shell"><span class="eyebrow">Marketplace</span><h1>Le catalogue WebNova</h1><p>Explorez nos templates, ressources, automatisations et formations premium.</p></div></section>
+      <section class="page-hero compact-hero"><div class="shell"><span class="eyebrow">Marketplace</span><h1>${tr('Le catalogue WebNova', 'The WebNova catalogue')}</h1><p>${tr('Explorez nos templates, ressources, automatisations et formations premium.', 'Explore our premium templates, resources, automations and practical courses.')}</p></div></section>
       <section class="catalog-section"><div class="shell catalog-layout">
         <aside class="filter-panel" id="filterPanel">
           <div class="filter-head"><h2>Filtres</h2><button id="clearFilters" type="button">Réinitialiser</button></div>
@@ -472,7 +493,7 @@
     const bundles = products.filter((product) => product.category === 'Bundles');
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Bundles Premium' }])}
-      <section class="page-hero bundle-hero"><div class="shell"><span class="eyebrow eyebrow-gold">Bundles Premium</span><h1>Plus de ressources.<br><span>Un objectif complet.</span></h1><p>Des collections complémentaires en cours de préparation. Les prix et contenus restent indicatifs jusqu’à leur validation finale.</p><div class="hero-mini-trust"><span>✓ Licence prévue</span><span>✓ Contenu à valider</span><span>✓ Support prévu</span></div></div></section>
+      <section class="page-hero bundle-hero"><div class="shell"><span class="eyebrow eyebrow-gold">Premium Bundles</span><h1>${tr('Plus de ressources.<br><span>Un objectif complet.</span>', 'More resources.<br><span>One complete outcome.</span>')}</h1><p>${tr('Comparez des collections complémentaires organisées par résultat. Les tarifs restent indicatifs jusqu’à l’ouverture commerciale.', 'Compare complementary collections organised around a clear outcome. Prices remain indicative until commercial launch.')}</p><div class="hero-mini-trust"><span>✓ ${tr('Licence détaillée', 'Detailed licence')}</span><span>✓ ${tr('Contenu comparé', 'Compared content')}</span><span>✓ ${tr('Support humain', 'Human support')}</span></div></div></section>
       <section class="section"><div class="shell bundle-list">${bundles.map((bundle, index) => `<article class="bundle-card-large ${index % 2 ? 'is-reversed' : ''}"><div class="bundle-cover" style="--product-accent:${bundle.accent}">${productVisual(bundle, 'visual-bundle')}<span class="savings-badge">${publicBadge(bundle)}</span></div><div class="bundle-details"><span class="eyebrow">Bundle ${String(index + 1).padStart(2, '0')}</span><h2>${bundle.title}</h2><p>${bundle.description}</p><ul>${bundle.features.map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="rating-line">${reviewStatus()}</div><div class="bundle-price"><strong>${formatPrice(bundle.price)}</strong><span>Prix indicatif</span></div><div class="button-row"><a class="btn btn-primary" href="product.html?id=${bundle.id}">Voir le bundle</a><button class="btn btn-ghost js-add-cart" data-id="${bundle.id}" type="button">Ajouter au panier</button></div></div></article>`).join('')}</div></section>`;
   }
 
@@ -481,9 +502,9 @@
     const courseLevel = (index) => ['Débutant', 'Intermédiaire', 'Avancé'][index % 3];
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Academy' }])}
-      <section class="academy-hero"><div class="academy-mesh" aria-hidden="true"></div><div class="shell"><div><span class="hero-kicker"><i></i> WebNova Academy</span><h1>Des compétences que vous pouvez <span>utiliser et monétiser.</span></h1><p>Apprenez par la pratique avec des parcours structurés, des projets concrets et des ressources téléchargeables.</p><div class="button-row"><a class="btn btn-gold btn-large" href="#formations">Voir les formations</a><a class="btn btn-ghost btn-large" href="catalogue.html?category=Academy">Parcourir les mini-cours</a></div><div class="hero-proof"><div><strong>8</strong><span>parcours préparés</span></div><div><strong>Projet</strong><span>pratique guidée</span></div><div><strong>Préversion</strong><span>contenus à valider</span></div></div></div><div class="academy-certificate"><span class="certificate-star">✦</span><small>MODÈLE DE CERTIFICAT</small><h2>WEBNOVA</h2><p>ACADEMY</p><i>Délivré après validation réelle du parcours</i></div></div></section>
-      <section class="section" id="formations"><div class="shell">${sectionHeading('Catalogue Academy', 'Choisissez votre prochaine compétence', 'Du marketing à l’automatisation, progressez dans le bon ordre.')}<div class="academy-filters"><label>Sujet<select id="academyTopic"><option value="">Tous les sujets</option>${courses.map((course) => course.collection).filter((value, index, list) => list.indexOf(value) === index).map((topic) => `<option value="${topic}">${topic}</option>`).join('')}</select></label><label>Niveau<select id="academyLevel"><option value="">Tous les niveaux</option><option>Débutant</option><option>Intermédiaire</option><option>Avancé</option></select></label><span><b id="academyCount">${courses.length}</b> parcours en préparation</span></div><div class="course-grid" id="academyGrid">${courses.map((course, index) => `<article class="course-card" data-topic="${course.collection}" data-level="${courseLevel(index)}"><a href="product.html?id=${course.id}" class="course-cover" style="--product-accent:${course.accent}"><span class="course-index">${String(index + 1).padStart(2, '0')}</span><span class="course-main-icon">${course.icon}</span><small>WEBNOVA ACADEMY</small></a><div class="course-body"><div class="product-meta"><span>${course.collection}</span><span>${course.type}</span></div><h2><a href="product.html?id=${course.id}">${course.title}</a></h2><p>${course.tagline}</p><div class="course-info"><span>▸ ${course.fileSize}</span><span>◉ ${courseLevel(index)}</span><span>✓ Quiz et certificat prévus</span><span>↓ PDF, templates et bonus prévus</span></div><div class="rating-line">${reviewStatus()}</div><div class="course-footer"><div class="price-line"><strong>${formatPrice(course.price)}</strong><small>Prix indicatif</small></div><a class="circle-link" href="product.html?id=${course.id}" aria-label="Voir ${course.title}">→</a></div></div></article>`).join('')}</div><div class="empty-state" id="academyEmpty" hidden><span>EDU</span><h2>Aucun parcours correspondant</h2><p>Modifiez le sujet ou le niveau sélectionné.</p></div></div></section>
-      <section class="section section-tinted"><div class="shell learning-path"><div><span class="eyebrow">Méthode WebNova</span><h2>Apprendre. Construire. Prouver.</h2><p>Chaque parcours transforme la théorie en résultat visible pour votre activité ou votre portfolio.</p></div><ol><li><span>01</span><div><h3>Comprendre</h3><p>Vidéos progressives et ressources PDF prévues.</p></div></li><li><span>02</span><div><h3>Pratiquer</h3><p>Quiz, exercices, templates et bonus applicables.</p></div></li><li><span>03</span><div><h3>Construire</h3><p>Un projet concret guidé étape par étape.</p></div></li><li><span>04</span><div><h3>Valoriser</h3><p>Un certificat prévu après validation réelle du parcours.</p></div></li></ol></div></section>`;
+      <section class="academy-hero"><div class="academy-mesh" aria-hidden="true"></div><div class="shell"><div><span class="hero-kicker"><i></i> WebNova Academy</span><h1>${tr('Des compétences que vous pouvez <span>utiliser et monétiser.</span>', 'Skills you can <span>use and monetise.</span>')}</h1><p>${tr('Apprenez par la pratique avec des parcours structurés, des projets concrets et des ressources téléchargeables.', 'Learn by doing with structured paths, practical projects and downloadable resources.')}</p><div class="button-row"><a class="btn btn-gold btn-large" href="#formations">${tr('Voir les formations', 'View courses')}</a><a class="btn btn-ghost btn-large" href="catalogue.html?category=Academy">${tr('Parcourir les mini-cours', 'Browse mini-courses')}</a></div><div class="hero-proof"><div><strong>8</strong><span>${tr('parcours structurés', 'structured paths')}</span></div><div><strong>${tr('Projet', 'Project')}</strong><span>${tr('pratique guidée', 'guided practice')}</span></div><div><strong>${tr('4 étapes', '4 steps')}</strong><span>${tr('méthode pédagogique', 'learning method')}</span></div></div></div><div class="academy-certificate"><span class="certificate-star">✦</span><small>${tr('MODÈLE DE CERTIFICAT', 'CERTIFICATE MODEL')}</small><h2>WEBNOVA</h2><p>ACADEMY</p><i>${tr('Délivré uniquement après réussite du parcours', 'Issued only after successful completion')}</i></div></div></section>
+      <section class="section" id="formations"><div class="shell">${sectionHeading('Catalogue Academy', 'Choisissez votre prochaine compétence', 'Du marketing à l’automatisation, progressez dans le bon ordre.')}<div class="academy-filters"><label>Sujet<select id="academyTopic"><option value="">Tous les sujets</option>${courses.map((course) => course.collection).filter((value, index, list) => list.indexOf(value) === index).map((topic) => `<option value="${topic}">${topic}</option>`).join('')}</select></label><label>Niveau<select id="academyLevel"><option value="">Tous les niveaux</option><option>Débutant</option><option>Intermédiaire</option><option>Avancé</option></select></label><span><b id="academyCount">${courses.length}</b> parcours</span></div><div class="course-grid" id="academyGrid">${courses.map((course, index) => `<article class="course-card" data-topic="${course.collection}" data-level="${courseLevel(index)}"><a href="product.html?id=${course.id}" class="course-cover" style="--product-accent:${course.accent}"><span class="course-index">${String(index + 1).padStart(2, '0')}</span><span class="course-main-icon">${course.icon}</span><small>WEBNOVA ACADEMY</small></a><div class="course-body"><div class="product-meta"><span>${course.collection}</span><span>${course.type}</span></div><h2><a href="product.html?id=${course.id}">${course.title}</a></h2><p>${course.tagline}</p><div class="course-info"><span>▸ ${course.fileSize}</span><span>◉ ${courseLevel(index)}</span><span>✓ Quiz et certificat à l’ouverture</span><span>↓ PDF, templates et bonus associés</span></div><div class="rating-line">${reviewStatus()}</div><div class="course-footer"><div class="price-line"><strong>${formatPrice(course.price)}</strong><small>Prix indicatif</small></div><a class="circle-link" href="product.html?id=${course.id}" aria-label="Voir le programme ${course.title}">→</a></div></div></article>`).join('')}</div><div class="empty-state" id="academyEmpty" hidden><span>EDU</span><h2>Aucun parcours correspondant</h2><p>Modifiez le sujet ou le niveau sélectionné.</p></div></div></section>
+      <section class="section section-tinted"><div class="shell learning-path"><div><span class="eyebrow">Méthode WebNova</span><h2>Apprendre. Construire. Prouver.</h2><p>Chaque parcours transforme la théorie en résultat visible pour votre activité ou votre portfolio.</p></div><ol><li><span>01</span><div><h3>Comprendre</h3><p>Leçons progressives et ressources PDF.</p></div></li><li><span>02</span><div><h3>Pratiquer</h3><p>Quiz, exercices, templates et bonus applicables.</p></div></li><li><span>03</span><div><h3>Construire</h3><p>Un projet concret guidé étape par étape.</p></div></li><li><span>04</span><div><h3>Valoriser</h3><p>Un certificat délivré après réussite du parcours.</p></div></li></ol></div></section>`;
     setupAcademyFilters();
   }
 
@@ -508,9 +529,16 @@
   function renderProduct() {
     const product = findProduct(params.get('id')) || products[0];
     const related = products.filter((item) => item.id !== product.id && (item.category === product.category || item.collection === product.collection)).slice(0, 4);
-    const version = product.version || '0.9 — préversion';
+    const productTerms = semanticTerms(`${product.title} ${product.category} ${product.collection} ${product.compatible}`);
+    const recommendedBundle = products.filter((item) => item.category === 'Bundles' && item.id !== product.id).map((item) => ({
+      item,
+      score: productTerms.filter((term) => normalizeText(`${item.title} ${item.description} ${item.features.join(' ')}`).includes(term)).length
+    })).sort((a, b) => b.score - a.score)[0]?.item || findProduct('bundle-business-starter');
+    const isCourse = product.category === 'Academy';
+    const version = product.version || '0.9 — fiche catalogue';
     const updatedAt = product.updatedAt || '13 juillet 2026';
     const productTags = [...new Set([product.category, product.collection, product.type, ...semanticTerms(`${product.title} ${product.compatible}`).slice(0, 4)])];
+    const availabilityUrl = `https://wa.me/23058574757?text=${encodeURIComponent(`Bonjour WebNova, je souhaite être informé de la disponibilité de ${product.title}.`)}`;
     document.title = `${product.title} — WebNova Marketplace`;
     const descriptionMeta = document.querySelector('meta[name="description"]');
     if (descriptionMeta) descriptionMeta.content = product.description;
@@ -521,12 +549,21 @@
       document.head.appendChild(canonical);
     }
     canonical.href = `https://webnova.company/product.html?id=${product.id}`;
+    const socialImage = product.cover ? new URL(product.cover, 'https://webnova.company/').href : 'https://webnova.company/assets/og-webnova-v2.jpg';
+    setMeta('property', 'og:type', 'product');
+    setMeta('property', 'og:title', `${product.title} — WebNova Marketplace`);
+    setMeta('property', 'og:description', product.description);
+    setMeta('property', 'og:url', canonical.href);
+    setMeta('property', 'og:image', socialImage);
+    setMeta('name', 'twitter:title', `${product.title} — WebNova Marketplace`);
+    setMeta('name', 'twitter:description', product.description);
+    setMeta('name', 'twitter:image', socialImage);
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: product.category, href: `catalogue.html?category=${encodeURIComponent(product.category)}` }, { label: product.title }])}
       <section class="product-detail"><div class="shell product-layout">
         <div class="product-gallery">
-          <div class="main-preview">${productVisual(product, 'visual-detail')}<button class="preview-button" type="button" id="openPreview"><span>▶</span> Voir l’aperçu de préproduction</button></div>
-          <div class="thumbnail-grid">${['Couverture', 'Galerie prévue', 'Aperçu interactif', 'Vidéo démo prévue'].map((label, index) => `<button type="button" class="thumbnail ${index === 0 ? 'is-active' : ''}" data-gallery-index="${index}" style="--product-accent:${product.accent}"><span>${index === 3 ? '▶' : product.icon}</span><small>${label}</small></button>`).join('')}</div>
+          <div class="main-preview">${productVisual(product, 'visual-detail')}<button class="preview-button" type="button" id="openPreview"><span>▶</span> Voir l’aperçu produit</button></div>
+          <div class="thumbnail-grid">${['Couverture', 'Détails', 'Aperçu interactif', 'Vidéo — non publiée'].map((label, index) => `<button type="button" class="thumbnail ${index === 0 ? 'is-active' : ''}" data-gallery-index="${index}" style="--product-accent:${product.accent}"><span>${index === 3 ? '▶' : product.icon}</span><small>${label}</small></button>`).join('')}</div>
         </div>
         <div class="product-summary">
           <div class="product-labels"><span>${publicBadge(product)}</span><span>${product.type}</span></div>
@@ -536,11 +573,13 @@
           <p class="product-description">${product.description}</p>
           <div class="feature-summary">${product.features.slice(0, 4).map((feature) => `<span>✓ ${feature}</span>`).join('')}</div>
           <div class="purchase-card">
-            <div class="purchase-price"><div><strong>${formatPrice(product.price)}</strong></div><span>Prix indicatif en ${selectedCurrency} · Vente non active</span></div>
-            <button class="btn btn-primary btn-block btn-large js-buy-now" type="button" data-id="${product.id}">Voir le checkout en préparation</button>
+            <div class="availability-status"><i></i><span>Pré-lancement · vente non activée</span></div>
+            <div class="purchase-price"><div><strong>${formatPrice(product.price)}</strong></div><span>Tarif indicatif en ${selectedCurrency}</span></div>
+            <a class="btn btn-primary btn-block btn-large" href="${availabilityUrl}" target="_blank" rel="noopener">Me prévenir à l’ouverture</a>
             <button class="btn btn-ghost btn-block js-add-cart" type="button" data-id="${product.id}">Ajouter au panier</button>
             <button class="wishlist-text js-wishlist" type="button" data-id="${product.id}">${getWishlist().includes(product.id) ? '♥ Retirer de la wishlist' : '♡ Ajouter à la wishlist'}</button>
-            <div class="purchase-trust"><span><b>⚡</b> Livraison automatique prévue</span><span><b>♢</b> Checkout à activer</span><span><b>↻</b> Mises à jour ${product.updates.toLowerCase()}</span></div>
+            <a class="checkout-preview-link" href="checkout.html?buy=${product.id}">Consulter le parcours de paiement sécurisé →</a>
+            <div class="purchase-trust"><span><b>⚡</b> Livraison numérique à l’ouverture</span><span><b>♢</b> FastSpring à l’activation</span><span><b>◎</b> Support humain disponible</span></div>
             <div class="payment-readiness" aria-label="Moyens de paiement prévus"><span>FastSpring-ready</span><span>VISA</span><span>Mastercard</span><span>G Pay</span><span>Apple Pay</span></div>
           </div>
           <p class="vat-note">Conversion indicative. Le prix localisé, les taxes et les moyens disponibles seront confirmés par le checkout avant toute vente.</p>
@@ -549,19 +588,21 @@
       <section class="product-information"><div class="shell info-layout">
         <div class="info-main">
           <div class="tabs" role="tablist"><button class="is-active" data-tab="description" type="button">Description</button><button data-tab="features" type="button">Caractéristiques</button><button data-tab="documentation" type="button">Documentation</button><button data-tab="changelog" type="button">Changelog</button><button data-tab="license" type="button">Licence</button><button data-tab="support" type="button">Support</button></div>
-          <div class="tab-panel is-active" data-panel="description"><h2>À propos de ${product.title}</h2><p>${product.description}</p><p>Cette fiche présente la structure prévue du produit. Avant l’ouverture commerciale, WebNova devra valider le fichier final, la documentation, la compatibilité annoncée et la livraison automatique.</p><div class="content-highlight"><span>✦</span><div><h3>Produit WebNova en préparation</h3><p>Direction premium, documentation française et support humain prévus depuis Maurice.</p></div></div></div>
+          <div class="tab-panel is-active" data-panel="description"><h2>À propos de ${product.title}</h2><p>${product.description}</p><p>Cette page vous permet d’évaluer précisément le contenu, le format, la compatibilité et la licence avant l’ouverture commerciale. Le fichier final n’est pas encore proposé à la vente.</p><div class="content-highlight"><span>✦</span><div><h3>Conçu par WebNova Studio</h3><p>Direction premium, documentation en français et support humain depuis Maurice.</p></div></div></div>
           <div class="tab-panel" data-panel="features"><h2>Tout ce qui est inclus</h2><div class="full-feature-grid">${product.features.map((feature) => `<div><span>✓</span><p>${feature}</p></div>`).join('')}</div><h3>Informations techniques</h3><div class="spec-table"><div><span>Format</span><b>${product.format}</b></div><div><span>Taille / durée</span><b>${product.fileSize}</b></div><div><span>Compatibilité</span><b>${product.compatible}</b></div><div><span>Mises à jour</span><b>${product.updates}</b></div></div></div>
-          <div class="tab-panel" data-panel="documentation"><h2>Documentation prévue</h2><p>Le téléchargement final devra inclure un guide d’installation, les prérequis, la personnalisation, la résolution des problèmes fréquents et les conditions de support.</p><div class="documentation-list"><span>01 · Guide de démarrage</span><span>02 · Compatibilité et prérequis</span><span>03 · Personnalisation</span><span>04 · FAQ technique</span></div></div>
-          <div class="tab-panel" data-panel="changelog"><h2>Historique des versions</h2><div class="changelog"><article><b>${version}</b><span>${updatedAt}</span><p>Fiche, contenu prévu et compatibilités préparés pour validation.</p></article><article><b>1.0</b><span>À venir</span><p>La version commerciale sera publiée uniquement après contrôle du fichier, de la documentation et de la livraison.</p></article></div></div>
-          <div class="tab-panel" data-panel="license"><h2>Licence d’utilisation prévue</h2><p>Lors de l’ouverture, l’achat devra inclure une licence personnelle ou commerciale précise pour un projet final. La revente, le partage ou la redistribution des fichiers sources resteront interdits.</p><a class="text-link" href="license.html">Lire la licence complète →</a></div>
-          <div class="tab-panel" data-panel="support"><h2>Support prévu</h2><p>Une documentation détaillée et ${product.support} de support sont prévus pour les questions d’installation et d’utilisation. Ces éléments devront être confirmés sur la fiche finale.</p><a class="btn btn-ghost" href="https://wa.me/23058574757" target="_blank" rel="noopener">Poser une question</a></div>
+          <div class="tab-panel" data-panel="documentation"><h2>Documentation au lancement</h2><p>Le package commercial devra inclure un guide d’installation, les prérequis, la personnalisation, la résolution des problèmes fréquents et les conditions de support.</p><div class="documentation-list"><span>01 · Guide de démarrage</span><span>02 · Compatibilité et prérequis</span><span>03 · Personnalisation</span><span>04 · FAQ technique</span></div></div>
+          <div class="tab-panel" data-panel="changelog"><h2>Historique des versions</h2><div class="changelog"><article><b>${version}</b><span>${updatedAt}</span><p>Fiche catalogue, contenu et compatibilités structurés pour le contrôle final.</p></article><article><b>1.0</b><span>Publication commerciale</span><p>Cette version sera publiée après validation du fichier, de la documentation et du parcours de livraison.</p></article></div></div>
+          <div class="tab-panel" data-panel="license"><h2>Licence d’utilisation</h2><p>La licence standard encadre l’utilisation personnelle ou commerciale pour un projet final. La revente, le partage ou la redistribution des fichiers sources restent interdits.</p><a class="text-link" href="license.html">Lire la licence complète →</a></div>
+          <div class="tab-panel" data-panel="support"><h2>Support WebNova</h2><p>Le support avant achat est disponible dès maintenant par WhatsApp et email. Le support produit indiqué (${product.support}) sera confirmé lors de la publication commerciale.</p><a class="btn btn-ghost" href="https://wa.me/23058574757" target="_blank" rel="noopener">Poser une question</a></div>
         </div>
-        <aside class="info-sidebar"><h3>Informations produit</h3><dl><div><dt>Auteur</dt><dd>WebNova Studio</dd></div><div><dt>Statut</dt><dd>En préparation</dd></div><div><dt>Version</dt><dd>${version}</dd></div><div><dt>Mise à jour</dt><dd>${updatedAt}</dd></div><div><dt>Taille / durée</dt><dd>${product.fileSize}</dd></div><div><dt>Format prévu</dt><dd>${product.format}</dd></div><div><dt>Compatibilité prévue</dt><dd>${product.compatible}</dd></div><div><dt>Support prévu</dt><dd>${product.support}</dd></div></dl><div class="product-tags">${productTags.map((tag) => `<a href="catalogue.html?search=${encodeURIComponent(tag)}">${tag}</a>`).join('')}</div><div class="secure-note"><span>♢</span><div><b>Validation requise</b><p>Les fichiers et la livraison seront testés avant la vente.</p></div></div></aside>
+        <aside class="info-sidebar"><h3>Informations produit</h3><dl><div><dt>Auteur</dt><dd>WebNova Studio</dd></div><div><dt>Disponibilité</dt><dd>Pré-lancement</dd></div><div><dt>Version</dt><dd>${version}</dd></div><div><dt>Mise à jour</dt><dd>${updatedAt}</dd></div><div><dt>Taille / durée</dt><dd>${product.fileSize}</dd></div><div><dt>Format</dt><dd>${product.format}</dd></div><div><dt>Compatibilité</dt><dd>${product.compatible}</dd></div><div><dt>Support produit</dt><dd>${product.support}</dd></div></dl><div class="product-tags">${productTags.map((tag) => `<a href="catalogue.html?search=${encodeURIComponent(tag)}">${tag}</a>`).join('')}</div><div class="secure-note"><span>♢</span><div><b>Contrôle avant vente</b><p>Fichier, documentation et livraison seront testés avant activation.</p></div></div></aside>
       </div></section>
-      <section class="section section-tinted" id="reviews"><div class="shell reviews-layout reviews-pending"><div class="review-score"><strong>—</strong><span>Aucune note publique</span></div><div><span class="eyebrow">Transparence</span><h2>Les avis apparaîtront après le lancement.</h2><p>WebNova publiera ici uniquement les retours liés à une commande réelle. Les témoignages et statistiques de démonstration ne sont pas présentés comme des preuves commerciales.</p></div></div></section>
-      <section class="section product-faq-section"><div class="shell product-faq-layout"><div><span class="eyebrow">FAQ produit</span><h2>Avant de choisir ${product.title}</h2><p>Les réponses correspondent à l’état actuel de la préversion.</p></div><div class="product-faq-list"><details open><summary>Le produit est-il déjà disponible ?</summary><p>Non. Cette fiche est une démonstration réaliste du catalogue. Le checkout reste bloqué tant que le fichier final et sa livraison automatique ne sont pas validés.</p></details><details><summary>Quel format est prévu ?</summary><p>${product.format}. Le téléchargement final devra inclure la documentation et la licence correspondant au produit.</p></details><details><summary>Quelle compatibilité est annoncée ?</summary><p>${product.compatible}. Cette compatibilité devra être testée avant l’ouverture commerciale.</p></details><details><summary>Quelle licence sera proposée ?</summary><p>Une licence WebNova claire pour un projet final est prévue. Les droits exacts seront rappelés avant le paiement et dans le fichier livré.</p></details><details><summary>Le support et les mises à jour sont-ils inclus ?</summary><p>${product.support} de support et des mises à jour ${product.updates.toLowerCase()} sont prévus. Ces engagements seront confirmés au lancement.</p></details></div></div></section>
+      ${isCourse ? `<section class="section academy-platform"><div class="shell">${sectionHeading('Expérience Academy', 'Un parcours clair, du cours au certificat', 'Le programme est consultable maintenant. Les vidéos, quiz et fichiers seront accessibles depuis le compte client après l’ouverture commerciale.')}<div class="academy-module-grid">${product.features.slice(0, 6).map((feature, index) => `<article><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${feature}</h3><p>${index < 2 ? 'Fondations et démonstration guidée.' : index < 4 ? 'Application pratique et ressources.' : 'Validation, projet et progression.'}</p></div><b>○</b></article>`).join('')}</div><div class="academy-delivery-grid"><article><span>▸</span><h3>Cours vidéo</h3><p>Leçons séquencées et reprise de progression.</p></article><article><span>?</span><h3>Quiz</h3><p>Validation des connaissances par module.</p></article><article><span>PDF</span><h3>Ressources</h3><p>PDF, modèles, checklists et bonus associés.</p></article><article><span>✓</span><h3>Certificat</h3><p>Délivré uniquement après réussite du parcours.</p></article></div></div></section>` : ''}
+      <section class="section section-tinted" id="reviews"><div class="shell reviews-layout reviews-pending"><div class="review-score"><strong>—</strong><span>Aucune note publique</span></div><div><span class="eyebrow">Avis vérifiés</span><h2>La confiance commence par des preuves réelles.</h2><p>Cette zone restera vide jusqu’aux premières commandes vérifiées. WebNova n’affiche ni témoignage fictif, ni volume de vente simulé.</p></div></div></section>
+      <section class="section product-faq-section"><div class="shell product-faq-layout"><div><span class="eyebrow">FAQ produit</span><h2>Avant de choisir ${product.title}</h2><p>Des réponses précises sur la disponibilité, le format, la compatibilité et la licence.</p></div><div class="product-faq-list"><details open><summary>Le produit est-il déjà disponible ?</summary><p>Pas encore. Cette fiche permet de comparer le produit et de rejoindre la liste d’information. Aucun paiement n’est accepté tant que le fichier final et sa livraison ne sont pas validés.</p></details><details><summary>Quel format sera livré ?</summary><p>${product.format}. Le package commercial inclura la documentation et la licence correspondant au produit.</p></details><details><summary>Quelle compatibilité est annoncée ?</summary><p>${product.compatible}. Cette compatibilité sera contrôlée avant l’ouverture commerciale.</p></details><details><summary>Quelle licence sera proposée ?</summary><p>La licence WebNova encadre un projet final personnel ou commercial selon la fiche. Les droits exacts seront rappelés avant le paiement et dans le package livré.</p></details><details><summary>Le support et les mises à jour sont-ils inclus ?</summary><p>Le support avant achat est déjà disponible. L’engagement produit annoncé est ${product.support}, avec des mises à jour ${product.updates.toLowerCase()}, à confirmer lors de la publication commerciale.</p></details></div></div></section>
+      ${recommendedBundle ? `<section class="section recommended-bundle-section"><div class="shell recommended-bundle"><div>${productVisual(recommendedBundle, 'visual-recommended')}</div><div><span class="eyebrow eyebrow-gold">Bundle recommandé</span><h2>${recommendedBundle.title}</h2><p>${recommendedBundle.description}</p><ul>${recommendedBundle.features.slice(0, 4).map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="bundle-price"><strong>${formatPrice(recommendedBundle.price)}</strong><span>Tarif indicatif</span></div><a class="btn btn-gold" href="product.html?id=${recommendedBundle.id}">Comparer le bundle</a></div></div></section>` : ''}
       <section class="section"><div class="shell">${sectionHeading('Vous aimerez aussi', 'Produits similaires', 'D’autres ressources sélectionnées pour votre projet.')}<div class="product-grid product-grid-four">${related.map((item) => productCard(item)).join('')}</div></div></section>
-      <dialog class="preview-dialog" id="previewDialog"><button class="dialog-close" type="button" id="closePreview" aria-label="Fermer">×</button><div class="demo-stage" style="--product-accent:${product.accent}"><div class="demo-top"><span></span><span></span><span></span><b>${product.title}</b></div><div class="demo-content"><aside>${product.features.slice(0,4).map((feature) => `<span>${feature}</span>`).join('')}</aside><main><div class="demo-hero"><small>APERÇU DE PRÉPRODUCTION</small><h2>${product.tagline}</h2><i></i></div><div class="demo-cards"><span></span><span></span><span></span></div></main></div><div class="demo-progress"><i></i></div></div><div class="dialog-caption"><h2>Aperçu de ${product.title}</h2><p>La vidéo et les captures définitives sont en préparation. Cet aperçu montre uniquement la direction prévue.</p></div></dialog>`;
+      <dialog class="preview-dialog" id="previewDialog"><button class="dialog-close" type="button" id="closePreview" aria-label="Fermer">×</button><div class="demo-stage" style="--product-accent:${product.accent}"><div class="demo-top"><span></span><span></span><span></span><b>${product.title}</b></div><div class="demo-content"><aside>${product.features.slice(0,4).map((feature) => `<span>${feature}</span>`).join('')}</aside><main><div class="demo-hero"><small>APERÇU PRODUIT</small><h2>${product.tagline}</h2><i></i></div><div class="demo-cards"><span></span><span></span><span></span></div></main></div><div class="demo-progress"><i></i></div></div><div class="dialog-caption"><h2>Aperçu de ${product.title}</h2><p>Cette présentation illustre la direction du produit. La vidéo finale n’est pas encore publiée.</p></div></dialog>`;
     setupProductPage(product);
   }
 
@@ -591,11 +632,13 @@
     schema.textContent = JSON.stringify({
       '@context': 'https://schema.org', '@type': 'Product', name: product.title,
       sku: product.id, description: product.description, category: product.category,
+      url: `https://webnova.company/product.html?id=${product.id}`,
+      ...(product.cover ? { image: new URL(product.cover, 'https://webnova.company/').href } : {}),
       brand: { '@type': 'Brand', name: 'WebNova' },
       additionalProperty: [
         { '@type': 'PropertyValue', name: 'Format', value: product.format },
         { '@type': 'PropertyValue', name: 'Compatibility', value: product.compatible },
-        { '@type': 'PropertyValue', name: 'Status', value: 'Pre-release catalogue preview' }
+        { '@type': 'PropertyValue', name: 'Availability', value: 'Pre-launch — not currently for sale' }
       ]
     });
     document.head.appendChild(schema);
@@ -608,7 +651,7 @@
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Panier' }])}
       <section class="page-hero compact-hero"><div class="shell"><span class="eyebrow">Votre sélection</span><h1>Panier</h1><p>${entries.length ? 'Vérifiez vos produits avant de continuer.' : 'Votre panier attend votre prochain projet.'}</p></div></section>
-      <section class="section"><div class="shell cart-layout">${entries.length ? `<div class="cart-items"><div class="cart-title"><h2>${entries.length} produit${entries.length > 1 ? 's' : ''}</h2><button type="button" data-clear-cart>Vider le panier</button></div>${entries.map(({ product, quantity }) => `<article class="cart-item">${productVisual(product, 'visual-cart')}<div class="cart-product"><span>${product.collection}</span><h3><a href="product.html?id=${product.id}">${product.title}</a></h3><p>${product.format} · Livraison automatique prévue</p><button class="js-remove-cart" data-id="${product.id}" type="button">Supprimer</button></div><label class="quantity-control"><span>Quantité</span><select class="js-quantity" data-id="${product.id}">${[1,2,3,4,5].map((value) => `<option ${value === Number(quantity) ? 'selected' : ''}>${value}</option>`).join('')}</select></label><strong>${formatPrice(product.price * quantity)}</strong></article>`).join('')}</div><aside class="order-summary"><h2>Résumé</h2><div><span>Sous-total indicatif</span><b>${formatPrice(subtotal)}</b></div><div><span>Livraison numérique prévue</span><b class="free">Gratuite</b></div><div class="summary-total"><span>Total indicatif</span><strong>${formatPrice(subtotal)}</strong></div><a class="btn btn-primary btn-block btn-large" href="checkout.html">Voir le checkout en préversion</a><a class="continue-link" href="catalogue.html">← Continuer mes achats</a><p>♢ Aucun paiement réel n’est actuellement accepté</p></aside>` : `<div class="empty-state standalone"><span>▱</span><h2>Votre panier est vide</h2><p>Explorez nos produits et ajoutez les ressources qui feront avancer votre projet.</p><a class="btn btn-primary" href="catalogue.html">Explorer le catalogue</a></div>`}</div></section>`;
+      <section class="section"><div class="shell cart-layout">${entries.length ? `<div class="cart-items"><div class="cart-title"><h2>${entries.length} produit${entries.length > 1 ? 's' : ''}</h2><button type="button" data-clear-cart>Vider le panier</button></div>${entries.map(({ product, quantity }) => `<article class="cart-item">${productVisual(product, 'visual-cart')}<div class="cart-product"><span>${product.collection}</span><h3><a href="product.html?id=${product.id}">${product.title}</a></h3><p>${product.format} · Livraison numérique à l’ouverture</p><button class="js-remove-cart" data-id="${product.id}" type="button">Supprimer</button></div><label class="quantity-control"><span>Quantité</span><select class="js-quantity" data-id="${product.id}">${[1,2,3,4,5].map((value) => `<option ${value === Number(quantity) ? 'selected' : ''}>${value}</option>`).join('')}</select></label><strong>${formatPrice(product.price * quantity)}</strong></article>`).join('')}</div><aside class="order-summary"><h2>Résumé</h2><div><span>Sous-total indicatif</span><b>${formatPrice(subtotal)}</b></div><div><span>Livraison numérique à l’ouverture</span><b class="free">Sans frais</b></div><div class="summary-total"><span>Total indicatif</span><strong>${formatPrice(subtotal)}</strong></div><a class="btn btn-primary btn-block btn-large" href="checkout.html">Prévisualiser le paiement sécurisé</a><a class="continue-link" href="catalogue.html">← Continuer mes achats</a><p>♢ Aucun paiement réel n’est actuellement accepté</p></aside>` : `<div class="empty-state standalone"><span>▱</span><h2>Votre panier est vide</h2><p>Explorez nos produits et ajoutez les ressources qui feront avancer votre projet.</p><a class="btn btn-primary" href="catalogue.html">Explorer le catalogue</a></div>`}</div></section>`;
   }
 
   function renderWishlist() {
@@ -620,15 +663,15 @@
   }
 
   function accountSidebar(active) {
-    return `<aside class="account-sidebar"><div class="account-profile"><span>AB</span><div><b>Espace client</b><small>Connexion en préparation</small></div></div><nav><a class="${active === 'account' ? 'is-active' : ''}" href="account.html">Tableau de bord</a><a class="${active === 'orders' ? 'is-active' : ''}" href="orders.html">Mes commandes & historique</a><a class="${active === 'downloads' ? 'is-active' : ''}" href="downloads.html">Téléchargements</a><a class="${active === 'licenses' ? 'is-active' : ''}" href="licenses.html">Mes licences</a><a class="${active === 'invoices' ? 'is-active' : ''}" href="invoices.html">Mes factures</a><a href="wishlist.html">Wishlist</a><a href="account.html#profile">Profil</a><a href="account.html#notifications">Notifications</a><a href="support.html">Aide</a></nav></aside>`;
+    return `<aside class="account-sidebar"><div class="account-profile"><span>◎</span><div><b>Espace client</b><small>Accès sécurisé à connecter</small></div></div><nav><a class="${active === 'account' ? 'is-active' : ''}" href="account.html">Tableau de bord</a><a class="${active === 'orders' ? 'is-active' : ''}" href="orders.html">Mes commandes & historique</a><a class="${active === 'downloads' ? 'is-active' : ''}" href="downloads.html">Téléchargements</a><a class="${active === 'licenses' ? 'is-active' : ''}" href="licenses.html">Mes licences</a><a class="${active === 'invoices' ? 'is-active' : ''}" href="invoices.html">Mes factures</a><a href="wishlist.html">Wishlist</a><a href="account.html#profile">Profil</a><a href="account.html#notifications">Notifications</a><a href="support.html">Aide</a></nav></aside>`;
   }
 
   function authGate(title, text) {
-    return `<div class="auth-gate"><span class="auth-symbol">✦</span><h2>${title}</h2><p>${text}</p><form class="signin-form" data-auth-form><label>Adresse email<input type="email" required placeholder="vous@entreprise.com"></label><button class="btn btn-primary btn-block" type="submit">Continuer avec mon email</button></form><div class="or-line"><span>ou</span></div><button class="btn btn-ghost btn-block" type="button" data-provider-login>Continuer avec Google</button><small>En continuant, vous acceptez nos <a href="terms.html">conditions d’utilisation</a>.</small></div>`;
+    return `<div class="auth-gate"><span class="auth-symbol">✦</span><span class="availability-pill">Accès non activé</span><h2>${title}</h2><p>${text}</p><a class="btn btn-primary btn-block" href="mailto:hello@webnova.company?subject=Acc%C3%A8s%20client%20WebNova">Être informé de l’ouverture</a><a class="btn btn-ghost btn-block" href="support.html">Contacter le support</a><small>L’authentification ne sera activée qu’après les tests de sécurité et la synchronisation des commandes.</small></div>`;
   }
 
   function renderAccount() {
-    $('#pageContent').innerHTML = `${breadcrumb([{ label: 'Mon compte' }])}<section class="account-section"><div class="shell account-layout">${accountSidebar('account')}<main class="account-content"><div class="account-heading"><span class="eyebrow">Espace personnel</span><h1>Bienvenue sur votre compte WebNova.</h1><p>Centralisez vos achats, fichiers, licences et formations en un seul endroit.</p></div>${authGate('Connectez-vous à votre espace', 'Utilisez l’adresse email employée lors de votre achat pour retrouver automatiquement vos produits.')}<div class="account-benefits"><article><span>↓</span><h3>Téléchargements centralisés</h3><p>Accédez à vos fichiers et à leurs mises à jour.</p></article><article><span>▤</span><h3>Commandes et historique</h3><p>Retrouvez les achats et leur statut réel.</p></article><article><span>◇</span><h3>Licences disponibles</h3><p>Consultez les droits associés à chaque produit.</p></article><article id="profile"><span>AB</span><h3>Profil</h3><p>Coordonnées et préférences après activation de l’authentification.</p></article><article id="notifications"><span>◎</span><h3>Notifications</h3><p>Mises à jour et disponibilité des téléchargements, avec consentement.</p></article><article><span>EDU</span><h3>Progression Academy</h3><p>Parcours, quiz et certificats après validation des cours.</p></article></div></main></div></section>`;
+    $('#pageContent').innerHTML = `${breadcrumb([{ label: tr('Mon compte', 'My account') }])}<section class="account-section"><div class="shell account-layout">${accountSidebar('account')}<main class="account-content"><div class="account-heading"><span class="eyebrow">${tr('Espace personnel', 'Customer area')}</span><h1>${tr('Votre expérience client, centralisée.', 'Your customer experience, in one place.')}</h1><p>${tr('Commandes, fichiers, licences, factures et formations seront réunis dans un espace sécurisé.', 'Orders, files, licences, invoices and courses will be available in one secure account.')}</p></div>${authGate(tr('Accès client sécurisé', 'Secure customer access'), tr('L’authentification sera ouverte avec la synchronisation réelle des commandes. Aucune fausse session client n’est simulée.', 'Authentication will open with live order synchronisation. No fake customer session is simulated.'))}<div class="account-benefits"><article><span>↓</span><h3>Téléchargements centralisés</h3><p>Accédez à vos fichiers et à leurs mises à jour.</p></article><article><span>▤</span><h3>Commandes et historique</h3><p>Retrouvez les achats et leur statut réel.</p></article><article><span>◇</span><h3>Licences disponibles</h3><p>Consultez les droits associés à chaque produit.</p></article><article id="profile"><span>◎</span><h3>Profil</h3><p>Coordonnées et préférences après activation de l’authentification.</p></article><article id="notifications"><span>◎</span><h3>Notifications</h3><p>Mises à jour et disponibilité des téléchargements, avec consentement.</p></article><article><span>EDU</span><h3>Progression Academy</h3><p>Parcours, quiz et certificats après validation des cours.</p></article></div></main></div></section>`;
   }
 
   function renderOrders() {
@@ -652,10 +695,13 @@
     const cart = direct ? { [direct.id]: 1 } : getCart();
     const entries = Object.entries(cart).map(([id, quantity]) => ({ product: findProduct(id), quantity })).filter((item) => item.product);
     const subtotal = entries.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const checkoutContract = window.WebNovaCommerce?.createCheckoutContract({ items: entries, currency: selectedCurrency, locale: language });
+    const commerceReadiness = window.WebNovaCommerce?.readiness();
+    window.WebNovaCheckoutPreview = checkoutContract;
     $('#pageContent').innerHTML = `
-      <section class="checkout-page"><div class="shell checkout-brand"><a class="brand" href="index.html">${logo()}</a><span>♢ Préversion sans paiement réel</span></div><div class="shell checkout-layout">
-        <main class="checkout-form"><a class="back-link" href="${direct ? `product.html?id=${direct.id}` : 'panier.html'}">← Retour</a><span class="eyebrow">Checkout FastSpring-ready</span><h1>Le paiement n’est pas encore activé.</h1><div class="checkout-activation"><span>✦</span><h2>Architecture préparée, activation contrôlée</h2><p>Cette préversion présente le parcours d’achat, mais WebNova n’accepte aucun paiement tant que la boutique, les produits et leur livraison automatique n’ont pas été validés.</p><ul><li>Catalogue local prêt à recevoir les identifiants produits FastSpring</li><li>Prix localisés et taxes à laisser au Merchant of Record</li><li>Visa, Mastercard, Google Pay et Apple Pay selon l’éligibilité du checkout</li><li>Webhooks serveur et liens de téléchargement à tester avant ouverture</li></ul><div class="payment-readiness payment-readiness-large"><span>FastSpring</span><span>VISA</span><span>Mastercard</span><span>Google Pay</span><span>Apple Pay</span></div><button class="btn btn-primary btn-block btn-large" type="button" disabled>Checkout bientôt disponible</button><p class="checkout-note">Aucune donnée bancaire n’est collectée sur cette page.</p></div></main>
-        <aside class="checkout-summary"><h2>Récapitulatif de précommande</h2>${entries.length ? entries.map(({ product, quantity }) => `<div class="checkout-item">${productVisual(product, 'visual-checkout')}<div><b>${product.title}</b><span>${product.collection} · Qté ${quantity}</span></div><strong>${formatPrice(product.price * quantity)}</strong></div>`).join('') : '<p>Aucun produit dans votre panier.</p>'}<div class="checkout-totals"><p><span>Sous-total indicatif</span><b>${formatPrice(subtotal)}</b></p><p><span>Livraison numérique prévue</span><b>Gratuite</b></p><p><span>Total indicatif</span><strong>${formatPrice(subtotal)}</strong></p></div><div class="delivery-box"><span>⚡</span><div><b>Livraison automatique prévue</b><p>Après activation, un lien sécurisé sera envoyé uniquement après confirmation serveur du paiement.</p></div></div></aside>
+      <section class="checkout-page"><div class="shell checkout-brand"><a class="brand" href="index.html">${logo()}</a><span>♢ Simulation technique · aucun paiement</span></div><div class="shell checkout-layout">
+        <main class="checkout-form"><a class="back-link" href="${direct ? `product.html?id=${direct.id}` : 'panier.html'}">← ${tr('Retour', 'Back')}</a><span class="eyebrow">FastSpring-ready checkout</span><h1>${tr('Paiement indisponible pour le moment.', 'Checkout is not available yet.')}</h1><div class="checkout-activation"><span>✦</span><h2>${tr('Architecture complète, activation contrôlée', 'Complete architecture, controlled activation')}</h2><p>${tr('Cette page vérifie le contrat de commande sans ouvrir de session de paiement. L’activation interviendra après approbation du prestataire et tests de livraison.', 'This page validates the order contract without opening a payment session. Activation will follow provider approval and delivery testing.')}</p><ul><li>${checkoutContract?.lineItems.length || 0} ${tr('référence normalisée pour le storefront FastSpring', 'normalised item for the FastSpring storefront')}</li><li>${tr('Devises CAD, EUR, USD et MUR préparées, taxes laissées au Merchant of Record', 'USD, CAD, EUR and MUR prepared; taxes delegated to the Merchant of Record')}</li><li>${tr('Visa, Mastercard, Google Pay et Apple Pay selon l’éligibilité réelle du checkout', 'Visa, Mastercard, Google Pay and Apple Pay subject to checkout eligibility')}</li><li>${tr('Confirmation serveur, email, facture, licence et lien signé exigés avant livraison', 'Server confirmation, email, invoice, licence and signed link required before delivery')}</li></ul><div class="commerce-readiness"><span class="${commerceReadiness?.providerConfigured ? 'is-ready' : ''}">${tr('Catalogue fournisseur', 'Provider catalogue')}</span><span class="${commerceReadiness?.currenciesConfigured ? 'is-ready' : ''}">${tr('Devises', 'Currencies')}</span><span class="${commerceReadiness?.requiresServerWebhook ? 'is-ready' : ''}">${tr('Webhook serveur', 'Server webhook')}</span><span class="${commerceReadiness?.requiresSecureDelivery ? 'is-ready' : ''}">${tr('Livraison sécurisée', 'Secure delivery')}</span></div><div class="payment-readiness payment-readiness-large"><span>FastSpring</span><span>VISA</span><span>Mastercard</span><span>Google Pay</span><span>Apple Pay</span></div><button class="btn btn-primary btn-block btn-large" type="button" disabled>${tr('Paiement non activé', 'Checkout not activated')}</button><p class="checkout-note">${tr('Aucune donnée bancaire n’est collectée sur cette page.', 'No payment card data is collected on this page.')}</p></div></main>
+        <aside class="checkout-summary"><h2>Récapitulatif du panier</h2>${entries.length ? entries.map(({ product, quantity }) => `<div class="checkout-item">${productVisual(product, 'visual-checkout')}<div><b>${product.title}</b><span>${product.collection} · Qté ${quantity}</span></div><strong>${formatPrice(product.price * quantity)}</strong></div>`).join('') : '<p>Aucun produit dans votre panier.</p>'}<div class="checkout-totals"><p><span>Sous-total indicatif</span><b>${formatPrice(subtotal)}</b></p><p><span>Livraison numérique à l’ouverture</span><b>Sans frais</b></p><p><span>Total indicatif</span><strong>${formatPrice(subtotal)}</strong></p></div><div class="delivery-box"><span>⚡</span><div><b>Livraison après confirmation serveur</b><p>Après activation, un lien signé sera envoyé uniquement lorsqu’un webhook de paiement vérifié aura confirmé la commande.</p></div></div></aside>
       </div></section>`;
   }
 
@@ -696,23 +742,80 @@
   }
 
   const blogPosts = [
-    ['SEO','SEO technique : la checklist avant publication','Les contrôles essentiels pour lancer une page rapide, indexable et structurée.','SEO'],
-    ['Google Business','Optimiser une fiche Google Business sans promesses irréalistes','Une méthode claire pour améliorer les informations, les contenus et le suivi local.','GBP'],
-    ['ChatGPT','Construire une bibliothèque de prompts réutilisable','Comment transformer des demandes isolées en système de travail cohérent.','GPT'],
-    ['IA','Choisir entre assistant, workflow et agent IA','Les critères pratiques pour sélectionner le bon niveau d’automatisation.','AI'],
-    ['n8n','Automatiser un lead de la capture au suivi','Architecture type, contrôles et points de vigilance avant la mise en production.','n8n'],
-    ['Marketing','Concevoir une offre numérique qui inspire confiance','Positionnement, preuve, licence, support et parcours d’achat.','MKT'],
-    ['Business','Vendre à l’international depuis Maurice','Devises, taxes, support et Merchant of Record : les décisions à préparer.','BIZ'],
-    ['Templates','Évaluer un template avant de le personnaliser','Performance, accessibilité, SEO, compatibilité et maintenabilité.','WEB']
+    { id: 'seo-checklist-publication', category: 'SEO', title: 'SEO technique : la checklist avant publication', excerpt: 'Les contrôles essentiels pour lancer une page rapide, indexable et structurée.', icon: 'SEO', readTime: '6 min', sections: [
+      ['Commencer par l’indexabilité', `Vérifiez le code de statut, la balise canonical, les directives robots et la présence de la page dans le sitemap. Une page techniquement inaccessible ne peut pas compenser son absence d’indexation par un meilleur contenu.`],
+      ['Contrôler vitesse et stabilité', `Optimisez les images, chargez les scripts sans bloquer le rendu et évitez les déplacements de mise en page. Testez le premier affichage sur un téléphone réel ou un viewport mobile, pas uniquement sur un grand écran.`],
+      ['Structurer pour les moteurs et les humains', `Utilisez un titre principal unique, une hiérarchie de sous-titres logique, des liens internes utiles et des données structurées adaptées. Le balisage doit décrire le contenu réel, jamais inventer une note ou une offre.`]
+    ]},
+    { id: 'google-business-optimisation', category: 'Google Business', title: 'Optimiser une fiche Google Business sans promesses irréalistes', excerpt: 'Une méthode claire pour améliorer les informations, les contenus et le suivi local.', icon: 'GBP', readTime: '5 min', sections: [
+      ['Fiabiliser les informations essentielles', `Le nom, l’adresse, les horaires, le téléphone et le site doivent rester cohérents partout. Choisissez une catégorie principale qui correspond exactement à l’activité et complétez uniquement les attributs réellement applicables.`],
+      ['Publier des contenus utiles', `Ajoutez des photos actuelles, des services précis et des publications qui répondent aux questions locales. Évitez les formulations comme « numéro un » ou « résultat garanti » si elles ne reposent pas sur une preuve vérifiable.`],
+      ['Mesurer les actions importantes', `Suivez les appels, demandes d’itinéraire et visites du site avec des paramètres cohérents. Comparez les périodes et les zones, puis améliorez une variable à la fois pour comprendre ce qui produit réellement un effet.`]
+    ]},
+    { id: 'bibliotheque-prompts-chatgpt', category: 'ChatGPT', title: 'Construire une bibliothèque de prompts réutilisable', excerpt: 'Comment transformer des demandes isolées en système de travail cohérent.', icon: 'GPT', readTime: '6 min', sections: [
+      ['Définir un cas d’usage précis', `Un bon prompt commence par un résultat mesurable : résumer un ticket, préparer un plan ou contrôler une réponse. Indiquez le rôle, le contexte, les contraintes et le format de sortie attendu.`],
+      ['Créer des variables', `Remplacez les informations changeantes par des champs nommés comme l’audience, la langue, le ton ou les sources. Une structure stable facilite les tests et réduit les variations inutiles entre deux utilisations.`],
+      ['Ajouter un contrôle qualité', `Précisez ce que le modèle doit vérifier avant de répondre et ce qu’il ne doit jamais inventer. Conservez des exemples acceptés, notez le modèle utilisé et révisez la bibliothèque lorsque les besoins ou les outils changent.`]
+    ]},
+    { id: 'assistant-workflow-agent-ia', category: 'IA', title: 'Choisir entre assistant, workflow et agent IA', excerpt: 'Les critères pratiques pour sélectionner le bon niveau d’automatisation.', icon: 'AI', readTime: '7 min', sections: [
+      ['Assistant : garder l’humain dans la boucle', `Choisissez un assistant quand la décision finale dépend du jugement humain. Il prépare, reformule ou analyse, mais une personne vérifie le résultat avant toute action externe.`],
+      ['Workflow : automatiser un processus stable', `Un workflow convient lorsque les étapes, les entrées et les exceptions sont connues. Il doit journaliser ses actions, gérer les doublons et prévoir une sortie claire en cas d’échec.`],
+      ['Agent : réserver l’autonomie aux tâches contrôlées', `Un agent peut sélectionner des outils et adapter son plan, mais son périmètre doit rester limité. Définissez des permissions minimales, des budgets, des validations et une traçabilité complète.`]
+    ]},
+    { id: 'n8n-lead-capture-suivi', category: 'n8n', title: 'Automatiser un lead de la capture au suivi', excerpt: 'Architecture type, contrôles et points de vigilance avant la mise en production.', icon: 'n8n', readTime: '7 min', sections: [
+      ['Capturer et normaliser', `Recevez le formulaire par webhook, validez les champs et normalisez téléphone, email et source. Ajoutez un identifiant unique afin d’éviter de créer plusieurs fois le même contact.`],
+      ['Distribuer sans perdre le contexte', `Enregistrez le lead dans le CRM, assignez un responsable et transmettez uniquement les informations nécessaires aux outils suivants. Chaque étape doit pouvoir être relancée sans doubler les actions.`],
+      ['Surveiller les erreurs', `Prévoyez des tentatives limitées, une file d’échec et une alerte avec le contexte utile. Un workflow fiable ne se contente pas de fonctionner une fois : il permet de comprendre rapidement pourquoi une exécution a échoué.`]
+    ]},
+    { id: 'offre-numerique-confiance', category: 'Marketing', title: 'Concevoir une offre numérique qui inspire confiance', excerpt: 'Positionnement, preuve, licence, support et parcours d’achat.', icon: 'MKT', readTime: '6 min', sections: [
+      ['Rendre la promesse concrète', `Expliquez à qui s’adresse le produit, quel problème il résout et ce que l’acheteur reçoit exactement. Une liste de fichiers, formats et prérequis est souvent plus convaincante qu’un slogan général.`],
+      ['Réduire le risque perçu', `Montrez la compatibilité, la licence, la politique de remboursement et les canaux de support avant le paiement. Ne remplacez jamais l’absence de preuve par de faux avis ou des compteurs simulés.`],
+      ['Construire un parcours cohérent', `La fiche, le panier, le checkout, l’email et l’espace client doivent utiliser les mêmes noms, prix et conditions. Toute étape non disponible doit être clairement signalée pour éviter une attente trompeuse.`]
+    ]},
+    { id: 'vendre-international-maurice', category: 'Business', title: 'Vendre à l’international depuis Maurice', excerpt: 'Devises, taxes, support et Merchant of Record : les décisions à préparer.', icon: 'BIZ', readTime: '7 min', sections: [
+      ['Localiser sans multiplier les erreurs', `Affichez les langues et devises utiles à votre audience, tout en distinguant une conversion indicative du montant réellement facturé. Le checkout doit rester la source finale pour les taxes et moyens de paiement.`],
+      ['Définir le rôle du Merchant of Record', `Un Merchant of Record peut gérer le paiement, la fiscalité transactionnelle et certains documents associés. Les responsabilités exactes dépendent du contrat : documentez les webhooks, remboursements et preuves de livraison avant l’ouverture.`],
+      ['Préparer support et conformité', `Publiez vos conditions, la licence, la confidentialité et les coordonnées professionnelles. Organisez également les fuseaux horaires, les langues de support et la conservation des données de commande.`]
+    ]},
+    { id: 'evaluer-template-web', category: 'Templates', title: 'Évaluer un template avant de le personnaliser', excerpt: 'Performance, accessibilité, SEO, compatibilité et maintenabilité.', icon: 'WEB', readTime: '5 min', sections: [
+      ['Tester la base technique', `Vérifiez la vitesse, le responsive, la navigation clavier et les contrastes. Un template visuellement réussi peut rester coûteux à corriger si sa structure HTML ou ses composants sont fragiles.`],
+      ['Confirmer la compatibilité', `Contrôlez la version des outils, les navigateurs ciblés, les dépendances et le format des fichiers sources. Lisez aussi la licence avant de commencer un projet client.`],
+      ['Évaluer la personnalisation', `Recherchez des styles cohérents, des composants réutilisables et une documentation claire. Plus les décisions sont centralisées, plus il sera simple d’adapter la marque sans créer des incohérences.`]
+    ]}
   ];
 
   function renderBlog() {
     document.title = 'Blog — WebNova Marketplace';
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Blog' }])}
-      <section class="page-hero blog-hero"><div class="shell"><span class="eyebrow">WebNova Insights</span><h1>Apprendre avant d’acheter.</h1><p>Guides pratiques sur le SEO, l’IA, l’automatisation, le marketing et les produits numériques. Les articles sont clairement marqués comme étant en préparation.</p></div></section>
-      <section class="section"><div class="shell"><div class="blog-filters" role="group" aria-label="Filtrer les articles"><button class="is-active" type="button" data-blog-filter="">Tous</button>${blogPosts.map(([category]) => category).map((value, index, list) => list.indexOf(value) === index ? `<button type="button" data-blog-filter="${value}">${value}</button>` : '').join('')}</div><div class="blog-grid" id="blogGrid">${blogPosts.map(([category,title,excerpt,icon], index) => `<article data-blog-category="${category}"><div class="blog-cover"><span>${icon}</span><small>GUIDE WEBNOVA · ${String(index + 1).padStart(2, '0')}</small></div><div><span>${category}</span><h2>${title}</h2><p>${excerpt}</p><small>Article en préparation · aucune date de publication simulée</small><a href="support.html">Suggérer une question →</a></div></article>`).join('')}</div></div></section>`;
+      <section class="page-hero blog-hero"><div class="shell"><span class="eyebrow">WebNova Insights</span><h1>${tr('Apprendre avant d’acheter.', 'Learn before you buy.')}</h1><p>${tr('Guides pratiques sur le SEO, l’IA, l’automatisation, le marketing et les produits numériques.', 'Practical guides covering SEO, AI, automation, marketing and digital products.')}</p></div></section>
+      <section class="section"><div class="shell"><div class="blog-filters" role="group" aria-label="Filtrer les articles"><button class="is-active" type="button" data-blog-filter="">Tous</button>${blogPosts.map(({ category }) => category).map((value, index, list) => list.indexOf(value) === index ? `<button type="button" data-blog-filter="${value}">${value}</button>` : '').join('')}</div><div class="blog-grid" id="blogGrid">${blogPosts.map(({ id,category,title,excerpt,icon,readTime }, index) => `<article data-blog-category="${category}"><a class="blog-cover" href="article.html?id=${id}" aria-label="Lire ${title}"><span>${icon}</span><small>GUIDE WEBNOVA · ${String(index + 1).padStart(2, '0')}</small></a><div><span>${category}</span><h2><a href="article.html?id=${id}">${title}</a></h2><p>${excerpt}</p><small>Publié le 14 juillet 2026 · ${readTime}</small><a href="article.html?id=${id}">Lire le guide →</a></div></article>`).join('')}</div></div></section>`;
     setupBlogFilters();
+  }
+
+  function renderArticle() {
+    const article = blogPosts.find((item) => item.id === params.get('id')) || blogPosts[0];
+    const related = blogPosts.filter((item) => item.id !== article.id).slice(0, 3);
+    document.title = `${article.title} — WebNova Insights`;
+    const descriptionMeta = document.querySelector('meta[name="description"]');
+    if (descriptionMeta) descriptionMeta.content = article.excerpt;
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+    canonical.href = `https://webnova.company/article.html?id=${article.id}`;
+    setMeta('property', 'og:type', 'article');
+    setMeta('property', 'og:title', article.title);
+    setMeta('property', 'og:description', article.excerpt);
+    setMeta('property', 'og:url', canonical.href);
+    setMeta('name', 'twitter:title', article.title);
+    setMeta('name', 'twitter:description', article.excerpt);
+    $('#pageContent').innerHTML = `
+      ${breadcrumb([{ label: 'Blog', href: 'blog.html' }, { label: article.title }])}
+      <article class="article-page"><header class="article-hero"><div class="shell"><span class="eyebrow">${article.category} · WebNova Insights</span><h1>${article.title}</h1><p>${article.excerpt}</p><div class="article-meta"><span>WebNova Studio</span><span>14 juillet 2026</span><span>${article.readTime} de lecture</span></div></div></header><div class="shell article-layout"><aside><span>Dans ce guide</span><nav>${article.sections.map(([title], index) => `<a href="#partie-${index + 1}">${String(index + 1).padStart(2, '0')} · ${title}</a>`).join('')}</nav><a href="support.html">Une question ? Contactez-nous →</a></aside><div class="article-content"><p class="article-lead">${article.excerpt} Voici une méthode concise, applicable et conçue pour éviter les promesses sans preuve.</p>${article.sections.map(([title,body], index) => `<section id="partie-${index + 1}"><span>${String(index + 1).padStart(2, '0')}</span><h2>${title}</h2><p>${body}</p></section>`).join('')}<div class="article-cta"><span>✦</span><div><h2>Passer de la méthode à l’action</h2><p>Explorez les ressources WebNova ou demandez un conseil sur le produit adapté à votre objectif.</p><div class="button-row"><a class="btn btn-primary" href="catalogue.html">Explorer le catalogue</a><a class="btn btn-ghost" href="support.html">Contacter le support</a></div></div></div></div></div></article>
+      <section class="section section-tinted"><div class="shell">${sectionHeading('À lire ensuite', 'Guides complémentaires', 'Continuez avec une autre méthode pratique.')}<div class="blog-grid">${related.map(({ id,category,title,excerpt,icon }) => `<article><a class="blog-cover" href="article.html?id=${id}"><span>${icon}</span><small>${category}</small></a><div><span>${category}</span><h2><a href="article.html?id=${id}">${title}</a></h2><p>${excerpt}</p><a href="article.html?id=${id}">Lire le guide →</a></div></article>`).join('')}</div></div></section>`;
+    const schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, datePublished: '2026-07-14', dateModified: '2026-07-14', author: { '@type': 'Organization', name: 'WebNova Studio' }, publisher: { '@type': 'Organization', name: 'WebNova Studio' }, mainEntityOfPage: canonical.href });
+    document.head.appendChild(schema);
   }
 
   function setupBlogFilters() {
@@ -724,11 +827,12 @@
   }
 
   function renderSupport() {
-    document.title = 'Centre d’aide — WebNova Marketplace';
+    document.title = tr('Centre d’aide — WebNova Marketplace', 'Help centre — WebNova Marketplace');
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Centre d’aide' }])}
-      <section class="page-hero"><div class="shell"><span class="eyebrow">Support WebNova</span><h1>Une réponse claire, par le bon canal.</h1><p>Le support automatisé n’est pas simulé. Vous contactez directement l’équipe ou consultez une ressource existante.</p></div></section>
+      <section class="page-hero"><div class="shell"><span class="eyebrow">WebNova Support</span><h1>${tr('Une réponse claire, par le bon canal.', 'Clear answers through the right channel.')}</h1><p>${tr('Consultez la documentation ou échangez directement avec l’équipe WebNova par WhatsApp et email.', 'Browse the documentation or contact the WebNova team directly through WhatsApp and email.')}</p></div></section>
       <section class="section"><div class="shell support-channel-grid"><a href="https://wa.me/23058574757" target="_blank" rel="noopener"><span>WA</span><h2>WhatsApp</h2><p>Questions avant achat, compatibilité et orientation produit.</p><b>Écrire à WebNova →</b></a><a href="mailto:hello@webnova.company"><span>@</span><h2>Email</h2><p>Demandes détaillées, documents et suivi écrit.</p><b>hello@webnova.company →</b></a><a href="faq.html"><span>?</span><h2>FAQ</h2><p>Paiement, livraison, licence, mises à jour et compte.</p><b>Consulter les réponses →</b></a><a href="blog.html"><span>DOC</span><h2>Guides</h2><p>Tutoriels SEO, IA, automatisation et produits numériques.</p><b>Explorer le blog →</b></a></div></section>
+      <section class="section support-topics"><div class="shell">${sectionHeading('Documentation', 'Accédez directement au bon sujet', 'Des réponses structurées avant l’achat et pendant l’utilisation.')}<div class="support-topic-grid"><a href="faq.html"><span>01</span><h3>Commande et paiement</h3><p>Checkout, devises, taxes et confirmation.</p></a><a href="downloads.html"><span>02</span><h3>Livraison numérique</h3><p>Accès, liens sécurisés et bibliothèque.</p></a><a href="license.html"><span>03</span><h3>Licences</h3><p>Projets personnels, commerciaux et clients.</p></a><a href="refund-policy.html"><span>04</span><h3>Remboursements</h3><p>Cas éligibles et procédure de demande.</p></a><a href="academy.html"><span>05</span><h3>Academy</h3><p>Parcours, quiz, ressources et certificats.</p></a><a href="blog.html"><span>06</span><h3>Guides pratiques</h3><p>SEO, IA, n8n, marketing et business.</p></a></div></div></section>
       <section class="section section-tinted"><div class="shell support-promise"><div><span class="eyebrow">Transparence</span><h2>Ce qui est disponible aujourd’hui</h2><p>WhatsApp, email et FAQ sont accessibles. Le chat temps réel, le suivi par ticket et la base documentaire complète sont inscrits à la roadmap.</p></div><a class="btn btn-primary" href="roadmap.html">Voir la roadmap</a></div></section>`;
   }
 
@@ -816,7 +920,7 @@
       cart: renderCart, wishlist: renderWishlist, account: renderAccount,
       orders: renderOrders, downloads: renderDownloads, licenses: renderLicenses,
       invoices: renderInvoices, checkout: renderCheckout,
-      blog: renderBlog, support: renderSupport, roadmap: renderRoadmap,
+      blog: renderBlog, article: renderArticle, support: renderSupport, roadmap: renderRoadmap,
       faq: renderFAQ, refunds: () => renderLegal('refunds'), license: () => renderLegal('license'),
       terms: () => renderLegal('terms'), privacy: () => renderLegal('privacy')
     };
@@ -886,12 +990,12 @@
 
     document.addEventListener('change', (event) => {
       if (event.target.matches('#languageSelect, .js-language-select')) {
-        writeStore('webnova-language', event.target.value);
+        writeStore('webnova-language-v2', event.target.value);
         window.location.reload();
         return;
       }
       if (event.target.matches('#currencySelect, .js-currency-select')) {
-        writeStore('webnova-currency', event.target.value);
+        writeStore('webnova-currency-v2', event.target.value);
         window.location.reload();
         return;
       }
@@ -909,15 +1013,6 @@
       button.setAttribute('aria-expanded', String(open));
     });
 
-    $$('.newsletter-form, [data-demo-form]').forEach((form) => form.addEventListener('submit', (event) => {
-      event.preventDefault(); form.reset(); showToast('Merci ! Votre inscription a bien été enregistrée.');
-    }));
-
-    $$('[data-auth-form]').forEach((form) => form.addEventListener('submit', (event) => {
-      event.preventDefault(); showToast('La connexion sécurisée sera activée avec le prestataire d’authentification.');
-    }));
-    $$('[data-provider-login]').forEach((button) => button.addEventListener('click', () => showToast('Connexion Google à activer avant la mise en production.')));
-
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closeSearch();
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openSearch(); }
@@ -926,6 +1021,7 @@
 
   function openSearch() {
     const overlay = $('#searchOverlay');
+    openSearch.returnFocus = document.activeElement;
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('no-scroll');
@@ -938,19 +1034,118 @@
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('no-scroll');
+    if (openSearch.returnFocus?.focus) openSearch.returnFocus.focus();
   }
 
   function setupGlobalSearch() {
     const input = $('#globalSearchInput');
     if (!input) return;
+    let activeIndex = -1;
+
+    const resultLink = (product) => `<a class="search-result-item" role="option" aria-selected="false" href="product.html?id=${product.id}">${productVisual(product, 'visual-search')}<span><small>${product.collection}</small><b>${product.title}</b><i>${product.tagline}</i></span><strong>${formatPrice(product.price)}</strong></a>`;
+    const resultSection = (title, items, link = '') => items.length ? `<section class="search-result-section"><div class="search-result-head"><b>${title}</b>${link}</div>${items.join('')}</section>` : '';
+
     function showResults(term) {
       const normalized = term.trim();
-      const matches = normalized ? searchProducts(normalized, 8) : products.filter((product) => product.isBestSeller).slice(0, 4);
-      $('#globalSearchResults').innerHTML = `<div class="search-result-head"><b>${normalized ? `Recherche assistée · ${matches.length} résultat${matches.length > 1 ? 's' : ''}` : 'Sélection WebNova'}</b>${normalized ? `<a href="catalogue.html?search=${encodeURIComponent(term)}">Voir dans le catalogue →</a>` : ''}</div>${matches.length ? matches.map((product) => `<a class="search-result-item" href="product.html?id=${product.id}">${productVisual(product, 'visual-search')}<span><small>${product.collection}</small><b>${product.title}</b><i>${product.tagline}</i></span><strong>${formatPrice(product.price)}</strong></a>`).join('') : '<div class="search-empty"><b>Aucune correspondance directe.</b><p>Essayez un besoin comme « template restaurant », « automatiser mes leads » ou « améliorer mon SEO ».</p></div>'}`;
+      const matches = normalized ? searchProducts(normalized, 16) : products.filter((product) => product.isBestSeller).slice(0, 8);
+      const standardProducts = matches.filter((product) => !['Bundles', 'Academy'].includes(product.category)).slice(0, 5);
+      const bundles = matches.filter((product) => product.category === 'Bundles').slice(0, 3);
+      const courses = matches.filter((product) => product.category === 'Academy').slice(0, 3);
+      const terms = semanticTerms(normalized);
+      const categorySuggestions = marketplaceUniverses.filter(([title,,description,termValue]) => {
+        if (!normalized) return ['Templates', 'Automation', 'AI', 'SEO'].includes(title);
+        const haystack = normalizeText(`${title} ${description} ${termValue}`);
+        return terms.some((value) => haystack.includes(value));
+      }).slice(0, 4);
+      const categoryLinks = categorySuggestions.map(([title,icon,description,termValue]) => `<a class="search-category-suggestion" role="option" aria-selected="false" href="catalogue.html?search=${encodeURIComponent(termValue)}"><span>${icon}</span><div><b>${title}</b><small>${description}</small></div><i>→</i></a>`);
+      const total = standardProducts.length + bundles.length + courses.length;
+      const catalogueLink = normalized ? `<a href="catalogue.html?search=${encodeURIComponent(term)}">Voir tous les résultats →</a>` : '<a href="catalogue.html">Tout le catalogue →</a>';
+      const sections = [
+        resultSection(normalized ? `Produits · ${standardProducts.length}` : 'Sélection WebNova', standardProducts.map(resultLink), catalogueLink),
+        resultSection('Catégories suggérées', categoryLinks),
+        resultSection('Bundles Premium', bundles.map(resultLink), '<a href="bundles.html">Tous les bundles →</a>'),
+        resultSection('WebNova Academy', courses.map(resultLink), '<a href="academy.html">Tous les parcours →</a>')
+      ].join('');
+      $('#globalSearchResults').innerHTML = sections || `<div class="search-empty"><b>Aucune correspondance directe.</b><p>Essayez un besoin comme « template restaurant », « automatiser mes leads » ou « améliorer mon SEO ».</p><a class="btn btn-ghost" href="support.html">Demander conseil</a></div>`;
+      input.setAttribute('aria-label', normalized ? `Recherche intelligente, ${total} résultat${total > 1 ? 's' : ''}` : 'Recherche intelligente');
+      activeIndex = -1;
     }
     input.addEventListener('input', () => showResults(input.value));
+    input.addEventListener('keydown', (event) => {
+      const links = $$('#globalSearchResults [role="option"]');
+      if (!links.length || !['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) return;
+      if (event.key === 'Enter' && activeIndex >= 0) {
+        event.preventDefault();
+        links[activeIndex].click();
+        return;
+      }
+      if (event.key === 'Enter') return;
+      event.preventDefault();
+      activeIndex = event.key === 'ArrowDown' ? (activeIndex + 1) % links.length : (activeIndex - 1 + links.length) % links.length;
+      links.forEach((link, index) => {
+        link.classList.toggle('is-keyboard-active', index === activeIndex);
+        link.setAttribute('aria-selected', String(index === activeIndex));
+      });
+      links[activeIndex].scrollIntoView({ block: 'nearest' });
+    });
     $$('.quick-searches button').forEach((button) => button.addEventListener('click', () => { input.value = button.dataset.searchTerm; showResults(input.value); }));
     showResults('');
+  }
+
+  function setupMotion() {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nav = $('#siteNav');
+    const hero = $('.market-hero');
+    const showcaseCard = $('.showcase-card');
+    let ticking = false;
+
+    const updateScrollEffects = () => {
+      const scrollY = window.scrollY;
+      nav?.classList.toggle('is-scrolled', scrollY > 18);
+      if (!reducedMotion && hero && showcaseCard && scrollY < hero.offsetHeight) {
+        hero.style.setProperty('--hero-scroll', `${Math.min(scrollY * .08, 26)}px`);
+        showcaseCard.style.setProperty('--showcase-scroll', `${Math.min(scrollY * .055, 18)}px`);
+      }
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { window.requestAnimationFrame(updateScrollEffects); ticking = true; }
+    }, { passive: true });
+    updateScrollEffects();
+
+    if (reducedMotion) return;
+    const revealTargets = $$('#pageContent .section-heading, #pageContent .product-card, #pageContent .category-card, #pageContent .bundle-card-large, #pageContent .course-card, #pageContent .trust-feature-grid article, #pageContent .support-channel-grid > a, #pageContent .blog-grid article, #pageContent .article-content > section');
+    revealTargets.forEach((element, index) => {
+      element.classList.add('reveal-ready');
+      element.style.setProperty('--reveal-delay', `${Math.min(index % 6, 5) * 45}ms`);
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .08, rootMargin: '0px 0px -40px' });
+    revealTargets.forEach((element) => observer.observe(element));
+
+    if (window.matchMedia('(pointer: fine)').matches) {
+      $$('.product-card, .course-card, .showcase-card').forEach((card) => {
+        card.classList.add('tilt-ready');
+        card.addEventListener('pointermove', (event) => {
+          const bounds = card.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width - .5;
+          const y = (event.clientY - bounds.top) / bounds.height - .5;
+          card.style.setProperty('--tilt-x', `${(-y * 3.2).toFixed(2)}deg`);
+          card.style.setProperty('--tilt-y', `${(x * 4.2).toFixed(2)}deg`);
+          card.style.setProperty('--glow-x', `${((x + .5) * 100).toFixed(0)}%`);
+          card.style.setProperty('--glow-y', `${((y + .5) * 100).toFixed(0)}%`);
+        });
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--tilt-x', '0deg');
+          card.style.setProperty('--tilt-y', '0deg');
+        });
+      });
+    }
   }
 
   renderHeader();
@@ -959,4 +1154,5 @@
   updateCounts();
   setupGlobalInteractions();
   setupGlobalSearch();
+  setupMotion();
 })();

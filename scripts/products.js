@@ -524,11 +524,14 @@ window.WebNovaData = (() => {
 
   const collections = [...new Set(products.map((product) => product.collection))];
   const commerce = {
-    provider: 'FastSpring',
+    provider: 'fastspring',
+    providerLabel: 'FastSpring',
     mode: 'prelaunch',
     checkoutEnabled: false,
     productPathPrefix: 'webnova-',
-    displayCurrencies: ['MUR', 'CAD', 'EUR', 'USD'],
+    currencies: ['USD', 'CAD', 'EUR', 'MUR'],
+    locales: ['en', 'fr', 'es', 'pt'],
+    webhookRequired: true,
     webhookValidationRequired: true,
     secureDeliveryRequired: true
   };

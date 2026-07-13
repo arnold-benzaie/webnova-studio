@@ -9,7 +9,7 @@ const requiredPages = [
   'index.html', 'catalogue.html', 'product.html', 'categories.html', 'bundles.html',
   'academy.html', 'panier.html', 'checkout.html', 'account.html', 'orders.html',
   'downloads.html', 'licenses.html', 'invoices.html', 'faq.html',
-  'blog.html', 'support.html', 'roadmap.html',
+  'blog.html', 'article.html', 'support.html', 'roadmap.html',
   'refund-policy.html', 'license.html', 'terms.html', 'privacy.html'
 ];
 
@@ -40,13 +40,35 @@ if (/reviews:\s*[1-9]/.test(productsSource)) errors.push('Compteurs d’avis non
 if (/sales:\s*[1-9]/.test(productsSource)) errors.push('Compteurs de ventes non vérifiés détectés dans les données');
 
 const storefrontSource = fs.readFileSync(path.join(root, 'scripts/main.js'), 'utf8');
-const forbiddenPublicClaims = ['aggregateRating', 'Achat vérifié', '1 500+', '4.9/5'];
+if (!storefrontSource.includes("readStore('webnova-language-v2', 'en')")) errors.push('Langue officielle par défaut incorrecte: anglais requis');
+if (!storefrontSource.includes("readStore('webnova-currency-v2', 'USD')")) errors.push('Devise officielle par défaut incorrecte: USD requis');
+const forbiddenPublicClaims = ['aggregateRating', 'Achat vérifié', '1 500+', '4.9/5', '★★★★★', 'Votre inscription a bien été enregistrée'];
 for (const claim of forbiddenPublicClaims) {
   if (storefrontSource.includes(claim)) errors.push(`Affirmation publique non vérifiée détectée: ${claim}`);
 }
 
-for (const capability of ['languageSelect', 'currencySelect', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderSupport', 'renderRoadmap']) {
+for (const capability of ['languageSelect', 'currencySelect', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderArticle', 'renderSupport', 'renderRoadmap', 'setupMotion']) {
   if (!storefrontSource.includes(capability)) errors.push(`Capacité marketplace manquante: ${capability}`);
+}
+
+const commercePath = path.join(root, 'scripts/commerce.js');
+if (!fs.existsSync(commercePath)) {
+  errors.push('Adaptateur commerce manquant: scripts/commerce.js');
+} else {
+  const commerceSource = fs.readFileSync(commercePath, 'utf8');
+  for (const capability of ['createCheckoutContract', 'verified-server-webhook', 'signedDownloadLinks', 'invoiceFromMerchantOfRecord']) {
+    if (!commerceSource.includes(capability)) errors.push(`Contrat FastSpring incomplet: ${capability}`);
+  }
+}
+
+const webhookContractPath = path.join(root, 'integrations/fastspring/webhook-contract.mjs');
+if (!fs.existsSync(webhookContractPath)) {
+  errors.push('Contrat webhook FastSpring manquant');
+} else {
+  const webhookSource = fs.readFileSync(webhookContractPath, 'utf8');
+  for (const safeguard of ['createHmac', 'timingSafeEqual', 'order.completed', 'hasProcessed', 'markProcessed']) {
+    if (!webhookSource.includes(safeguard)) errors.push(`Protection webhook manquante: ${safeguard}`);
+  }
 }
 
 for (const match of productsSource.matchAll(/cover:\s*'([^']+)'/g)) {

@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
 const client = path.join(dist, 'client');
 const server = path.join(dist, 'server');
-const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || '20260713').slice(0, 8);
+const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || '20260714').slice(0, 8);
 
 const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
   <span>WEBNOVA MARKETPLACE</span>
@@ -15,13 +16,20 @@ const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
 </section>`;
 
 function prepareHtml(source) {
-  let output = source
+  let output = source;
+  if (!output.includes('scripts/commerce.js')) {
+    output = output.replace(
+      '<script defer src="scripts/main.js"></script>',
+      '<script defer src="scripts/commerce.js"></script><script defer src="scripts/main.js"></script>'
+    );
+  }
+  output = output
     .replace(
       /<link href="(https:\/\/fonts\.googleapis\.com\/[^"]+)" rel="stylesheet">/,
       '<link href="$1" rel="stylesheet" media="print" onload="this.media=\'all\'">\n  <noscript><link href="$1" rel="stylesheet"></noscript>'
     )
     .replace(
-      /(styles\/main\.css|scripts\/products\.js|scripts\/main\.js)(?:\?v=[^"']*)?/g,
+      /(styles\/main\.css|scripts\/products\.js|scripts\/commerce\.js|scripts\/main\.js)(?:\?v=[^"']*)?/g,
       `$1?v=${assetVersion}`
     )
     .replace(
@@ -70,6 +78,28 @@ for (const name of rootFiles) {
 for (const directory of ['assets', 'scripts', 'styles']) {
   fs.cpSync(path.join(root, directory), path.join(client, directory), { recursive: true });
 }
+
+const productSandbox = { window: {} };
+vm.runInNewContext(fs.readFileSync(path.join(root, 'scripts', 'products.js'), 'utf8'), productSandbox);
+const productIds = productSandbox.window.WebNovaData.products.map((product) => product.id);
+const articleIds = [
+  'seo-checklist-publication', 'google-business-optimisation', 'bibliotheque-prompts-chatgpt',
+  'assistant-workflow-agent-ia', 'n8n-lead-capture-suivi', 'offre-numerique-confiance',
+  'vendre-international-maurice', 'evaluer-template-web'
+];
+const sitemapEntries = [
+  ['https://webnova.company/', '1.0', 'weekly'],
+  ...['catalogue', 'categories', 'bundles', 'academy', 'blog', 'support', 'roadmap', 'faq'].map((name) => [`https://webnova.company/${name}.html`, name === 'catalogue' ? '0.9' : '0.8', name === 'catalogue' ? 'daily' : 'weekly']),
+  ...['refund-policy', 'license', 'terms', 'privacy'].map((name) => [`https://webnova.company/${name}.html`, '0.5', 'yearly']),
+  ...productIds.map((id) => [`https://webnova.company/product.html?id=${id}`, '0.8', 'weekly']),
+  ...articleIds.map((id) => [`https://webnova.company/article.html?id=${id}`, '0.7', 'monthly'])
+];
+const generatedSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapEntries.map(([url, priority, frequency]) => `  <url><loc>${url}</loc><lastmod>2026-07-14</lastmod><changefreq>${frequency}</changefreq><priority>${priority}</priority></url>`).join('\n')}
+</urlset>
+`;
+fs.writeFileSync(path.join(client, 'sitemap.xml'), generatedSitemap);
 
 const worker = `const worker = {
   async fetch(request, env) {
