@@ -188,8 +188,8 @@
             </div>
             <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="${activeTheme === 'white' ? tr('Activer le thème bleu nuit', 'Switch to midnight theme') : tr('Activer le thème blanc', 'Switch to white theme')}" aria-pressed="${activeTheme === 'white'}"><span aria-hidden="true">${activeTheme === 'white' ? '☾' : '☀'}</span></button>
             <button class="icon-button search-button" type="button" data-open-search aria-label="${t('search')}"><span aria-hidden="true">⌕</span></button>
-            <a class="icon-button" href="wishlist.html" aria-label="Liste de souhaits"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count aria-hidden="true">0</span></a>
-            <a class="icon-button" href="panier.html" aria-label="Panier"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count aria-hidden="true">0</span></a>
+            <a class="icon-button" href="wishlist.html" aria-label="♡ ${tr('Liste de souhaits', 'Wishlist')} 0"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count aria-hidden="true">0</span></a>
+            <a class="icon-button" href="panier.html" aria-label="▱ ${tr('Panier', 'Cart')} 0"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count aria-hidden="true">0</span></a>
             <a class="account-link" href="account.html"><span class="account-avatar">◎</span><span>${t('account')}</span></a>
             <button class="mobile-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
           </div>
@@ -1096,8 +1096,16 @@
   }
 
   function updateCounts() {
-    $$('[data-cart-count]').forEach((item) => item.textContent = cartCount());
-    $$('[data-wishlist-count]').forEach((item) => item.textContent = getWishlist().length);
+    $$('[data-cart-count]').forEach((item) => {
+      const count = cartCount();
+      item.textContent = count;
+      item.closest('a')?.setAttribute('aria-label', `▱ ${tr('Panier', 'Cart')} ${count}`);
+    });
+    $$('[data-wishlist-count]').forEach((item) => {
+      const count = getWishlist().length;
+      item.textContent = count;
+      item.closest('a')?.setAttribute('aria-label', `♡ ${tr('Liste de souhaits', 'Wishlist')} ${count}`);
+    });
   }
 
   function addToCart(id) {
