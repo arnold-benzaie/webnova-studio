@@ -144,4 +144,9 @@ export default worker;
 
 fs.writeFileSync(path.join(server, 'index.js'), worker);
 
+// Sites validates the deployment metadata inside the generated dist archive.
+const hostingDirectory = path.join(dist, '.openai');
+fs.mkdirSync(hostingDirectory, { recursive: true });
+fs.copyFileSync(path.join(root, '.openai', 'hosting.json'), path.join(hostingDirectory, 'hosting.json'));
+
 console.log(`Build WebNova prêt : ${rootFiles.length} pages/fichiers racine et 3 répertoires statiques.`);
