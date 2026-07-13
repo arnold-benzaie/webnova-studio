@@ -200,6 +200,8 @@
           <a href="bundles.html">${t('bundles')}</a>
           <a href="academy.html">${t('academy')}</a>
           <a href="blog.html">${t('blog')}</a>
+          <a href="about.html">${tr('À propos', 'About')}</a>
+          <a href="contact.html">Contact</a>
           <a href="downloads.html">Téléchargements</a>
           <a href="orders.html">Mes commandes</a>
           <a href="licenses.html">Mes licences</a>
@@ -236,7 +238,7 @@
           <div><h3>Marketplace</h3><a href="catalogue.html">Tous les produits</a><a href="categories.html">Catégories</a><a href="bundles.html">Bundles Premium</a><a href="academy.html">WebNova Academy</a><a href="blog.html">Blog & tutoriels</a></div>
           <div><h3>Ressources</h3><a href="support.html">Centre d’aide</a><a href="faq.html">Documentation</a><a href="roadmap.html">Roadmap</a><a href="blog.html">Guides pratiques</a><a href="https://github.com/arnold-benzaie/webnova-studio" target="_blank" rel="noopener">GitHub</a></div>
           <div><h3>Mon espace</h3><a href="account.html">Mon compte</a><a href="orders.html">Mes commandes</a><a href="downloads.html">Téléchargements</a><a href="licenses.html">Mes licences</a><a href="invoices.html">Mes factures</a><a href="wishlist.html">Wishlist</a></div>
-          <div><h3>Aide & légal</h3><a href="faq.html">Questions fréquentes</a><a href="refund-policy.html">Remboursements</a><a href="license.html">Licence d’utilisation</a><a href="terms.html">Conditions de vente</a><a href="privacy.html">Confidentialité</a></div>
+          <div><h3>Entreprise & légal</h3><a href="about.html">À propos</a><a href="contact.html">Contact</a><a href="faq.html">Questions fréquentes</a><a href="refund-policy.html">Remboursements</a><a href="license.html">Licence d’utilisation</a><a href="terms.html">Conditions de vente</a><a href="privacy.html">Confidentialité</a><a href="legal-notice.html">Mentions légales</a></div>
           <div><h3>Nous suivre</h3><a href="blog.html">WebNova Insights</a><a href="roadmap.html">Roadmap publique</a><a href="https://github.com/arnold-benzaie/webnova-studio" target="_blank" rel="noopener">GitHub</a><a href="mailto:hello@webnova.company">Email</a><a href="https://wa.me/23058574757" target="_blank" rel="noopener">WhatsApp</a></div>
         </div>
         <div class="shell footer-bottom"><span>© 2026 WebNova Studio. Tous droits réservés.</span><span>Digital · Innovation · Mauritius</span><a href="https://wa.me/23058574757" target="_blank" rel="noopener">Support WhatsApp : +230 5857 4757</a></div>
@@ -272,6 +274,28 @@
     return `<span class="review-pending" title="${tr('Les avis seront publiés uniquement après des commandes vérifiées', 'Reviews will only be published after verified orders')}">☆ ${tr('Aucun avis publié', 'No reviews published')}</span>`;
   }
 
+  function localizedProductTagline(product) {
+    if (language === 'fr') return product.tagline;
+    if (language === 'es') return `${product.type} para ${product.collection}, con formato y compatibilidad documentados.`;
+    if (language === 'pt') return `${product.type} para ${product.collection}, com formato e compatibilidade documentados.`;
+    return `${product.type} for ${product.collection}, with documented format and compatibility.`;
+  }
+
+  function localizedProductDescription(product) {
+    if (language === 'fr') return product.longDescription || product.description;
+    const intro = language === 'es'
+      ? `${product.title} es un recurso WebNova de la categoría ${product.category}.`
+      : language === 'pt'
+        ? `${product.title} é um recurso WebNova da categoria ${product.category}.`
+        : `${product.title} is a WebNova resource in the ${product.category} category.`;
+    const details = language === 'es'
+      ? `Esta ficha documenta el contenido, el formato (${product.format}), la compatibilidad (${product.compatible}), los requisitos, la licencia y el soporte antes de la activación comercial.`
+      : language === 'pt'
+        ? `Esta página documenta o conteúdo, o formato (${product.format}), a compatibilidade (${product.compatible}), os requisitos, a licença e o suporte antes da ativação comercial.`
+        : `This listing documents the included content, format (${product.format}), compatibility (${product.compatible}), prerequisites, licence and support scope before commercial activation.`;
+    return `${intro} ${details}`;
+  }
+
   function productCard(product, compact = false) {
     const wishlisted = getWishlist().includes(product.id);
     return `
@@ -285,7 +309,7 @@
         <div class="product-card-body">
           <div class="product-meta"><span>${product.collection}</span><span>${product.type}</span></div>
           <h3><a href="product.html?id=${product.id}">${product.title}</a></h3>
-          <p>${product.tagline}</p>
+          <p>${localizedProductTagline(product)}</p>
           <div class="rating-line">${reviewStatus()}</div>
           <div class="price-line"><strong>${formatPrice(product.price)}</strong><small>${tr('Prix indicatif', 'Indicative price')}</small></div>
         </div>
@@ -514,7 +538,7 @@
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'Bundles Premium' }])}
       <section class="page-hero bundle-hero"><div class="shell"><span class="eyebrow eyebrow-gold">Premium Bundles</span><h1>${tr('Plus de ressources.<br><span>Un objectif complet.</span>', 'More resources.<br><span>One complete outcome.</span>')}</h1><p>${tr('Comparez des collections complémentaires organisées par résultat. Les tarifs restent indicatifs jusqu’à l’ouverture commerciale.', 'Compare complementary collections organised around a clear outcome. Prices remain indicative until commercial launch.')}</p><div class="hero-mini-trust"><span>✓ ${tr('Licence détaillée', 'Detailed licence')}</span><span>✓ ${tr('Contenu comparé', 'Compared content')}</span><span>✓ ${tr('Support humain', 'Human support')}</span></div></div></section>
-      <section class="section"><div class="shell bundle-list">${bundles.map((bundle, index) => `<article class="bundle-card-large ${index % 2 ? 'is-reversed' : ''}"><div class="bundle-cover" style="--product-accent:${bundle.accent}">${productVisual(bundle, 'visual-bundle')}<span class="savings-badge">${publicBadge(bundle)}</span></div><div class="bundle-details"><span class="eyebrow">Bundle ${String(index + 1).padStart(2, '0')}</span><h2>${bundle.title}</h2><p>${bundle.description}</p><ul>${bundle.features.map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="rating-line">${reviewStatus()}</div><div class="bundle-price"><strong>${formatPrice(bundle.price)}</strong><span>Prix indicatif</span></div><div class="button-row"><a class="btn btn-primary" href="product.html?id=${bundle.id}">Voir le bundle</a><button class="btn btn-ghost js-add-cart" data-id="${bundle.id}" type="button">Ajouter au panier</button></div></div></article>`).join('')}</div></section>`;
+      <section class="section"><div class="shell bundle-list">${bundles.map((bundle, index) => `<article class="bundle-card-large ${index % 2 ? 'is-reversed' : ''}"><div class="bundle-cover" style="--product-accent:${bundle.accent}">${productVisual(bundle, 'visual-bundle')}<span class="savings-badge">${publicBadge(bundle)}</span></div><div class="bundle-details"><span class="eyebrow">Bundle ${String(index + 1).padStart(2, '0')}</span><h2>${bundle.title}</h2><p>${localizedProductDescription(bundle)}</p><ul>${bundle.features.map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="rating-line">${reviewStatus()}</div><div class="bundle-price"><strong>${formatPrice(bundle.price)}</strong><span>Prix indicatif</span></div><div class="button-row"><a class="btn btn-primary" href="product.html?id=${bundle.id}">Voir le bundle</a><button class="btn btn-ghost js-add-cart" data-id="${bundle.id}" type="button">Ajouter au panier</button></div></div></article>`).join('')}</div></section>`;
   }
 
   function renderAcademy() {
@@ -561,7 +585,8 @@
     const availabilityUrl = `https://wa.me/23058574757?text=${encodeURIComponent(`Bonjour WebNova, je souhaite être informé de la disponibilité de ${product.title}.`)}`;
     document.title = `${product.title} — WebNova Marketplace`;
     const descriptionMeta = document.querySelector('meta[name="description"]');
-    if (descriptionMeta) descriptionMeta.content = product.description;
+    const localizedDescription = localizedProductDescription(product);
+    if (descriptionMeta) descriptionMeta.content = localizedDescription;
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement('link');
@@ -572,25 +597,26 @@
     const socialImage = product.cover ? new URL(product.cover, 'https://webnova.company/').href : 'https://webnova.company/assets/og-webnova-v2.jpg';
     setMeta('property', 'og:type', 'product');
     setMeta('property', 'og:title', `${product.title} — WebNova Marketplace`);
-    setMeta('property', 'og:description', product.description);
+    setMeta('property', 'og:description', localizedDescription);
     setMeta('property', 'og:url', canonical.href);
     setMeta('property', 'og:image', socialImage);
     setMeta('name', 'twitter:title', `${product.title} — WebNova Marketplace`);
-    setMeta('name', 'twitter:description', product.description);
+    setMeta('name', 'twitter:description', localizedDescription);
     setMeta('name', 'twitter:image', socialImage);
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: product.category, href: `catalogue.html?category=${encodeURIComponent(product.category)}` }, { label: product.title }])}
       <section class="product-detail"><div class="shell product-layout">
         <div class="product-gallery">
           <div class="main-preview">${productVisual(product, 'visual-detail')}<button class="preview-button" type="button" id="openPreview"><span>▶</span> Voir l’aperçu produit</button></div>
-          <div class="thumbnail-grid">${['Couverture', 'Détails', 'Aperçu interactif', 'Vidéo — non publiée'].map((label, index) => `<button type="button" class="thumbnail ${index === 0 ? 'is-active' : ''}" data-gallery-index="${index}" style="--product-accent:${product.accent}"><span>${index === 3 ? '▶' : product.icon}</span><small>${label}</small></button>`).join('')}</div>
+          <div class="thumbnail-grid">${product.screenshots.map((item, index) => `<button type="button" class="thumbnail ${index === 0 ? 'is-active' : ''}" data-gallery-index="${index}" style="--product-accent:${product.accent}" aria-label="${item.label}: ${item.description}"><span>${index === 3 ? 'DOC' : product.icon}</span><small>${item.label}</small></button>`).join('')}</div>
+          <div class="gallery-disclosure" id="galleryCaption" aria-live="polite"><b>${product.screenshots[0].status}</b><span>${product.screenshots[0].description}</span></div>
         </div>
         <div class="product-summary">
           <div class="product-labels"><span>${publicBadge(product)}</span><span>${product.type}</span></div>
           <h1>${product.title}</h1>
-          <p class="product-tagline">${product.tagline}</p>
+          <p class="product-tagline">${localizedProductTagline(product)}</p>
           <div class="rating-line rating-large">${reviewStatus()}</div>
-          <p class="product-description">${product.description}</p>
+          <p class="product-description">${localizedDescription}</p>
           <div class="feature-summary">${product.features.slice(0, 4).map((feature) => `<span>✓ ${feature}</span>`).join('')}</div>
           <div class="purchase-card">
             <div class="availability-status"><i></i><span>Pré-lancement · vente non activée</span></div>
@@ -608,21 +634,21 @@
       <section class="product-information"><div class="shell info-layout">
         <div class="info-main">
           <div class="tabs" role="tablist"><button class="is-active" data-tab="description" type="button">Description</button><button data-tab="features" type="button">Caractéristiques</button><button data-tab="documentation" type="button">Documentation</button><button data-tab="changelog" type="button">Changelog</button><button data-tab="license" type="button">Licence</button><button data-tab="support" type="button">Support</button></div>
-          <div class="tab-panel is-active" data-panel="description"><h2>À propos de ${product.title}</h2><p>${product.description}</p><p>Cette page vous permet d’évaluer précisément le contenu, le format, la compatibilité et la licence avant l’ouverture commerciale. Le fichier final n’est pas encore proposé à la vente.</p><div class="content-highlight"><span>✦</span><div><h3>Conçu par WebNova Studio</h3><p>Direction premium, documentation en français et support humain depuis Maurice.</p></div></div></div>
+          <div class="tab-panel is-active" data-panel="description"><h2>À propos de ${product.title}</h2><p>${localizedDescription}</p><p>Cette page permet d’évaluer le contenu, le format, la compatibilité et la licence avant l’ouverture commerciale. Le fichier final n’est pas encore proposé à la vente.</p><div class="content-highlight"><span>✦</span><div><h3>Conçu par WebNova Studio</h3><p>Direction premium, documentation structurée et support humain depuis Maurice.</p></div></div></div>
           <div class="tab-panel" data-panel="features"><h2>Tout ce qui est inclus</h2><div class="full-feature-grid">${product.features.map((feature) => `<div><span>✓</span><p>${feature}</p></div>`).join('')}</div><h3>Informations techniques</h3><div class="spec-table"><div><span>Format</span><b>${product.format}</b></div><div><span>Taille / durée</span><b>${product.fileSize}</b></div><div><span>Compatibilité</span><b>${product.compatible}</b></div><div><span>Mises à jour</span><b>${product.updates}</b></div></div></div>
-          <div class="tab-panel" data-panel="documentation"><h2>Documentation au lancement</h2><p>Le package commercial devra inclure un guide d’installation, les prérequis, la personnalisation, la résolution des problèmes fréquents et les conditions de support.</p><div class="documentation-list"><span>01 · Guide de démarrage</span><span>02 · Compatibilité et prérequis</span><span>03 · Personnalisation</span><span>04 · FAQ technique</span></div></div>
+          <div class="tab-panel" data-panel="documentation"><h2>Documentation et prérequis</h2><p>La structure documentaire est définie. Les fichiers finaux seront contrôlés avant l’activation commerciale.</p><h3>Documentation prévue</h3><div class="documentation-list">${product.documentation.map((item, index) => `<span>${String(index + 1).padStart(2, '0')} · ${item}</span>`).join('')}</div><h3>Prérequis</h3><ul class="prerequisite-list">${product.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul></div>
           <div class="tab-panel" data-panel="changelog"><h2>Historique des versions</h2><div class="changelog"><article><b>${version}</b><span>${updatedAt}</span><p>Fiche catalogue, contenu et compatibilités structurés pour le contrôle final.</p></article><article><b>1.0</b><span>Publication commerciale</span><p>Cette version sera publiée après validation du fichier, de la documentation et du parcours de livraison.</p></article></div></div>
-          <div class="tab-panel" data-panel="license"><h2>Licence d’utilisation</h2><p>La licence standard encadre l’utilisation personnelle ou commerciale pour un projet final. La revente, le partage ou la redistribution des fichiers sources restent interdits.</p><a class="text-link" href="license.html">Lire la licence complète →</a></div>
+          <div class="tab-panel" data-panel="license"><h2>${product.licenseName}</h2><p>${product.licenseSummary}</p><a class="text-link" href="license.html">Lire la licence complète →</a></div>
           <div class="tab-panel" data-panel="support"><h2>Support WebNova</h2><p>Le support avant achat est disponible dès maintenant par WhatsApp et email. Le support produit indiqué (${product.support}) sera confirmé lors de la publication commerciale.</p><a class="btn btn-ghost" href="https://wa.me/23058574757" target="_blank" rel="noopener">Poser une question</a></div>
         </div>
-        <aside class="info-sidebar"><h3>Informations produit</h3><dl><div><dt>Auteur</dt><dd>WebNova Studio</dd></div><div><dt>Disponibilité</dt><dd>Pré-lancement</dd></div><div><dt>Version</dt><dd>${version}</dd></div><div><dt>Mise à jour</dt><dd>${updatedAt}</dd></div><div><dt>Taille / durée</dt><dd>${product.fileSize}</dd></div><div><dt>Format</dt><dd>${product.format}</dd></div><div><dt>Compatibilité</dt><dd>${product.compatible}</dd></div><div><dt>Support produit</dt><dd>${product.support}</dd></div></dl><div class="product-tags">${productTags.map((tag) => `<a href="catalogue.html?search=${encodeURIComponent(tag)}">${tag}</a>`).join('')}</div><div class="secure-note"><span>♢</span><div><b>Contrôle avant vente</b><p>Fichier, documentation et livraison seront testés avant activation.</p></div></div></aside>
+        <aside class="info-sidebar"><h3>Informations produit</h3><dl><div><dt>Auteur</dt><dd>WebNova Studio</dd></div><div><dt>Disponibilité</dt><dd>Pré-lancement</dd></div><div><dt>Version</dt><dd>${version}</dd></div><div><dt>Mise à jour</dt><dd>${updatedAt}</dd></div><div><dt>Taille / durée</dt><dd>${product.fileSize}</dd></div><div><dt>Format</dt><dd>${product.format}</dd></div><div><dt>Compatibilité</dt><dd>${product.compatible}</dd></div><div><dt>Licence</dt><dd>${product.licenseName}</dd></div><div><dt>Support produit</dt><dd>${product.support}</dd></div></dl><div class="product-tags">${productTags.map((tag) => `<a href="catalogue.html?search=${encodeURIComponent(tag)}">${tag}</a>`).join('')}</div><div class="secure-note"><span>♢</span><div><b>Contrôle avant vente</b><p>Fichier, documentation et livraison seront testés avant activation.</p></div></div></aside>
       </div></section>
       ${isCourse ? `<section class="section academy-platform"><div class="shell">${sectionHeading('Expérience Academy', 'Un parcours clair, du cours au certificat', 'Le programme est consultable maintenant. Les vidéos, quiz et fichiers seront accessibles depuis le compte client après l’ouverture commerciale.')}<div class="academy-module-grid">${product.features.slice(0, 6).map((feature, index) => `<article><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${feature}</h3><p>${index < 2 ? 'Fondations et démonstration guidée.' : index < 4 ? 'Application pratique et ressources.' : 'Validation, projet et progression.'}</p></div><b>○</b></article>`).join('')}</div><div class="academy-delivery-grid"><article><span>▸</span><h3>Cours vidéo</h3><p>Leçons séquencées et reprise de progression.</p></article><article><span>?</span><h3>Quiz</h3><p>Validation des connaissances par module.</p></article><article><span>PDF</span><h3>Ressources</h3><p>PDF, modèles, checklists et bonus associés.</p></article><article><span>✓</span><h3>Certificat</h3><p>Délivré uniquement après réussite du parcours.</p></article></div></div></section>` : ''}
       <section class="section section-tinted" id="reviews"><div class="shell reviews-layout reviews-pending"><div class="review-score"><strong>—</strong><span>Aucune note publique</span></div><div><span class="eyebrow">Avis vérifiés</span><h2>La confiance commence par des preuves réelles.</h2><p>Cette zone restera vide jusqu’aux premières commandes vérifiées. WebNova n’affiche ni témoignage fictif, ni volume de vente simulé.</p></div></div></section>
       <section class="section product-faq-section"><div class="shell product-faq-layout"><div><span class="eyebrow">FAQ produit</span><h2>Avant de choisir ${product.title}</h2><p>Des réponses précises sur la disponibilité, le format, la compatibilité et la licence.</p></div><div class="product-faq-list"><details open><summary>Le produit est-il déjà disponible ?</summary><p>Pas encore. Cette fiche permet de comparer le produit et de rejoindre la liste d’information. Aucun paiement n’est accepté tant que le fichier final et sa livraison ne sont pas validés.</p></details><details><summary>Quel format sera livré ?</summary><p>${product.format}. Le package commercial inclura la documentation et la licence correspondant au produit.</p></details><details><summary>Quelle compatibilité est annoncée ?</summary><p>${product.compatible}. Cette compatibilité sera contrôlée avant l’ouverture commerciale.</p></details><details><summary>Quelle licence sera proposée ?</summary><p>La licence WebNova encadre un projet final personnel ou commercial selon la fiche. Les droits exacts seront rappelés avant le paiement et dans le package livré.</p></details><details><summary>Le support et les mises à jour sont-ils inclus ?</summary><p>Le support avant achat est déjà disponible. L’engagement produit annoncé est ${product.support}, avec des mises à jour ${product.updates.toLowerCase()}, à confirmer lors de la publication commerciale.</p></details></div></div></section>
-      ${recommendedBundle ? `<section class="section recommended-bundle-section"><div class="shell recommended-bundle"><div>${productVisual(recommendedBundle, 'visual-recommended')}</div><div><span class="eyebrow eyebrow-gold">Bundle recommandé</span><h2>${recommendedBundle.title}</h2><p>${recommendedBundle.description}</p><ul>${recommendedBundle.features.slice(0, 4).map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="bundle-price"><strong>${formatPrice(recommendedBundle.price)}</strong><span>Tarif indicatif</span></div><a class="btn btn-gold" href="product.html?id=${recommendedBundle.id}">Comparer le bundle</a></div></div></section>` : ''}
+      ${recommendedBundle ? `<section class="section recommended-bundle-section"><div class="shell recommended-bundle"><div>${productVisual(recommendedBundle, 'visual-recommended')}</div><div><span class="eyebrow eyebrow-gold">Bundle recommandé</span><h2>${recommendedBundle.title}</h2><p>${localizedProductDescription(recommendedBundle)}</p><ul>${recommendedBundle.features.slice(0, 4).map((feature) => `<li>✓ ${feature}</li>`).join('')}</ul><div class="bundle-price"><strong>${formatPrice(recommendedBundle.price)}</strong><span>Tarif indicatif</span></div><a class="btn btn-gold" href="product.html?id=${recommendedBundle.id}">Comparer le bundle</a></div></div></section>` : ''}
       <section class="section"><div class="shell">${sectionHeading('Vous aimerez aussi', 'Produits similaires', 'D’autres ressources sélectionnées pour votre projet.')}<div class="product-grid product-grid-four">${related.map((item) => productCard(item)).join('')}</div></div></section>
-      <dialog class="preview-dialog" id="previewDialog"><button class="dialog-close" type="button" id="closePreview" aria-label="Fermer">×</button><div class="demo-stage" style="--product-accent:${product.accent}"><div class="demo-top"><span></span><span></span><span></span><b>${product.title}</b></div><div class="demo-content"><aside>${product.features.slice(0,4).map((feature) => `<span>${feature}</span>`).join('')}</aside><main><div class="demo-hero"><small>APERÇU PRODUIT</small><h2>${product.tagline}</h2><i></i></div><div class="demo-cards"><span></span><span></span><span></span></div></main></div><div class="demo-progress"><i></i></div></div><div class="dialog-caption"><h2>Aperçu de ${product.title}</h2><p>Cette présentation illustre la direction du produit. La vidéo finale n’est pas encore publiée.</p></div></dialog>`;
+      <dialog class="preview-dialog" id="previewDialog"><button class="dialog-close" type="button" id="closePreview" aria-label="Fermer">×</button><div class="demo-stage" style="--product-accent:${product.accent}"><div class="demo-top"><span></span><span></span><span></span><b>${product.title}</b></div><div class="demo-content"><aside>${product.features.slice(0,4).map((feature) => `<span>${feature}</span>`).join('')}</aside><main><div class="demo-hero"><small>APERÇU PRODUIT</small><h2>${localizedProductTagline(product)}</h2><i></i></div><div class="demo-cards"><span></span><span></span><span></span></div></main></div><div class="demo-progress"><i></i></div></div><div class="dialog-caption"><h2>Aperçu de ${product.title}</h2><p>Cette présentation illustre la direction du produit. La vidéo finale n’est pas encore publiée.</p></div></dialog>`;
     setupProductPage(product);
   }
 
@@ -636,8 +662,11 @@
     $$('.thumbnail').forEach((button) => button.addEventListener('click', () => {
       $$('.thumbnail').forEach((item) => item.classList.remove('is-active'));
       button.classList.add('is-active');
+      const item = product.screenshots[Number(button.dataset.galleryIndex)] || product.screenshots[0];
       const visualType = $('.main-preview .visual-type');
-      if (visualType) visualType.textContent = button.querySelector('small').textContent;
+      if (visualType) visualType.textContent = item.label;
+      const caption = $('#galleryCaption');
+      if (caption) caption.innerHTML = `<b>${item.status}</b><span>${item.description}</span>`;
     }));
     const dialog = $('#previewDialog');
     $('#openPreview').addEventListener('click', () => dialog.showModal());
@@ -651,7 +680,7 @@
     schema.type = 'application/ld+json';
     schema.textContent = JSON.stringify({
       '@context': 'https://schema.org', '@type': 'Product', name: product.title,
-      sku: product.id, description: product.description, category: product.category,
+      sku: product.id, description: localizedProductDescription(product), category: product.category,
       url: `https://webnova.company/product.html?id=${product.id}`,
       ...(product.cover ? { image: new URL(product.cover, 'https://webnova.company/').href } : {}),
       brand: { '@type': 'Brand', name: 'WebNova' },
@@ -725,7 +754,7 @@
       </div></section>`;
   }
 
-  const faqItems = [
+  const faqItemsFr = [
     ['Comment vais-je recevoir mon achat ?', 'Après l’ouverture commerciale et la confirmation serveur du paiement, un email contenant le reçu et un lien sécurisé sera envoyé automatiquement. Le produit apparaîtra également dans la page Téléchargements du compte.'],
     ['Combien de temps ai-je accès aux fichiers ?', 'L’accès reste disponible dans votre compte aussi longtemps que le produit est commercialisé. Nous recommandons néanmoins de conserver une sauvegarde personnelle de vos fichiers.'],
     ['Puis-je utiliser un template pour un client ?', 'Oui, si la licence commerciale du produit l’autorise. Une licence standard couvre un projet final. Une nouvelle licence est nécessaire pour chaque projet ou client supplémentaire.'],
@@ -735,16 +764,32 @@
     ['Puis-je demander un remboursement ?', 'En raison de la nature numérique des produits, les achats téléchargés ne sont généralement pas remboursables. Une exception peut être étudiée en cas de fichier défectueux ou non conforme. Consultez la politique complète.'],
     ['Puis-je voir une démonstration avant l’achat ?', 'Chaque fiche produit contient une galerie, un aperçu et, lorsqu’elle est disponible, une démonstration. Vous pouvez contacter le support pour toute question spécifique.'],
     ['Les formations délivreront-elles un certificat ?', 'Un certificat WebNova est prévu pour les parcours indiqués comme certifiants. Il ne sera activé qu’après validation des contenus, des modules et du projet final.'],
-    ['Comment contacter le support ?', 'Le support est disponible par email à hello@webnova.company et via WhatsApp au +230 5857 4757. Le délai de réponse habituel est d’un jour ouvré.'],
+    ['Comment contacter le support ?', 'Le support est disponible par email à hello@webnova.company et via WhatsApp au +230 5857 4757. Aucun délai garanti n’est affiché sans données de support vérifiables.'],
     ['Puis-je télécharger mes produits plusieurs fois ?', 'Oui, depuis votre compte et dans le respect d’un usage raisonnable. Des contrôles de sécurité peuvent être appliqués pour protéger les créateurs.'],
-    ['Les prix incluent-ils les taxes ?', 'Les prix sont affichés en roupies mauriciennes. Les taxes applicables selon votre pays seront précisées avant le paiement.']
+    ['Les prix incluent-ils les taxes ?', 'Les prix localisés affichés avant l’ouverture sont indicatifs. Après activation, le checkout précisera la devise transactionnelle, les taxes et le total final avant le paiement.']
   ];
+
+  const faqItemsEn = [
+    ['How will I receive my purchase?', 'After commercial launch and server-side payment confirmation, an email with the receipt and a secure link will be sent automatically. The product will also appear in the Downloads area of the customer account.'],
+    ['How long can I access my files?', 'Account access is intended to remain available while the product is supported. Customers should also keep a personal backup of legitimately purchased files.'],
+    ['Can I use a template for a client?', 'Yes, when the product licence permits client work. A standard licence covers one end project; each additional project or client requires a separate licence unless stated otherwise.'],
+    ['Can I resell or share the source files?', 'No. Public sharing, redistribution, resale or inclusion of source files in another downloadable product is prohibited.'],
+    ['Do products receive updates?', 'The planned update period is stated on each product page. Confirmed updates will appear in the customer download library after launch.'],
+    ['Which payment methods will be accepted?', 'After activation, FastSpring will display eligible methods based on country, currency and provider rules. WebNova will not collect complete card numbers on its own website.'],
+    ['Can I request a refund?', 'Because these are digital products, downloaded purchases are generally final. A request may be reviewed for a defective, inaccessible or materially misdescribed file under the published refund policy.'],
+    ['Can I see a demonstration before purchase?', 'Each listing provides a clearly labelled presentation preview. Real product screenshots and demonstrations must be added before the corresponding item is commercially activated.'],
+    ['Will Academy courses include certificates?', 'A WebNova certificate is planned only for marked learning paths and will be issued after the course content, assessments and completion rules are validated.'],
+    ['How can I contact support?', 'Support is currently available at hello@webnova.company and on WhatsApp at +230 5857 4757. No guaranteed response time is advertised without verified support data.'],
+    ['Can I download a product more than once?', 'The account architecture supports repeat access subject to reasonable security controls. This functionality will be activated only after secure delivery is tested.'],
+    ['Do displayed prices include tax?', 'Pre-launch localised prices are indicative. After activation, checkout will show the transaction currency, applicable taxes and final total before payment.']
+  ];
+  const faqItems = language === 'fr' ? faqItemsFr : faqItemsEn;
 
   function renderFAQ() {
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: 'FAQ' }])}
-      <section class="page-hero"><div class="shell"><span class="eyebrow">Centre d’aide</span><h1>Comment pouvons-nous vous aider ?</h1><p>Les réponses essentielles concernant les produits, paiements, téléchargements et licences.</p><form class="faq-search"><span>⌕</span><input id="faqSearch" type="search" placeholder="Rechercher dans les questions…" aria-label="Rechercher une question"></form></div></section>
-      <section class="section"><div class="shell faq-layout"><aside><h2>Besoin d’aide ?</h2><p>Notre équipe répond à vos questions avant et après l’achat.</p><a class="btn btn-primary btn-block" href="https://wa.me/23058574757" target="_blank" rel="noopener">Écrire sur WhatsApp</a><a href="mailto:hello@webnova.company">hello@webnova.company</a></aside><div class="faq-list" id="faqList">${faqItems.map(([question, answer], index) => `<article data-faq-text="${question.toLowerCase()} ${answer.toLowerCase()}"><button type="button" aria-expanded="${index === 0 ? 'true' : 'false'}"><span>${question}</span><i>+</i></button><div class="faq-answer" ${index === 0 ? '' : 'hidden'}><p>${answer}</p></div></article>`).join('')}</div></div></section>`;
+      <section class="page-hero"><div class="shell"><span class="eyebrow">${tr('Centre d’aide', 'Help centre')}</span><h1>${tr('Comment pouvons-nous vous aider ?', 'How can we help?')}</h1><p>${tr('Les réponses essentielles concernant les produits, paiements, téléchargements et licences.', 'Essential answers about products, payments, downloads and licences.')}</p><form class="faq-search"><span>⌕</span><input id="faqSearch" type="search" placeholder="${tr('Rechercher dans les questions…', 'Search the questions…')}" aria-label="${tr('Rechercher une question', 'Search questions')}"></form></div></section>
+      <section class="section"><div class="shell faq-layout"><aside><h2>${tr('Besoin d’aide ?', 'Need help?')}</h2><p>${tr('Notre équipe répond à vos questions avant et après l’achat.', 'Our team can answer product and licence questions.')}</p><a class="btn btn-primary btn-block" href="https://wa.me/23058574757" target="_blank" rel="noopener">${tr('Écrire sur WhatsApp', 'Message on WhatsApp')}</a><a href="mailto:hello@webnova.company">hello@webnova.company</a></aside><div class="faq-list" id="faqList">${faqItems.map(([question, answer], index) => `<article data-faq-text="${question.toLowerCase()} ${answer.toLowerCase()}"><button type="button" aria-expanded="${index === 0 ? 'true' : 'false'}"><span>${question}</span><i>+</i></button><div class="faq-answer" ${index === 0 ? '' : 'hidden'}><p>${answer}</p></div></article>`).join('')}</div></div></section>`;
     setupFAQ();
   }
 
@@ -856,6 +901,24 @@
       <section class="section section-tinted"><div class="shell support-promise"><div><span class="eyebrow">Transparence</span><h2>Ce qui est disponible aujourd’hui</h2><p>WhatsApp, email et FAQ sont accessibles. Le chat temps réel, le suivi par ticket et la base documentaire complète sont inscrits à la roadmap.</p></div><a class="btn btn-primary" href="roadmap.html">Voir la roadmap</a></div></section>`;
   }
 
+  function renderAbout() {
+    document.title = tr('À propos — WebNova Marketplace', 'About — WebNova Marketplace');
+    $('#pageContent').innerHTML = `
+      ${breadcrumb([{ label: tr('À propos', 'About') }])}
+      <section class="page-hero"><div class="shell"><span class="eyebrow">WebNova Marketplace</span><h1>${tr('Des ressources numériques conçues avec clarté.', 'Digital resources built with clarity.')}</h1><p>${tr('WebNova Studio construit depuis Maurice une marketplace internationale de templates, automatisations, outils IA et formations pratiques.', 'WebNova Studio is building an international marketplace from Mauritius for templates, automations, AI tools and practical courses.')}</p></div></section>
+      <section class="section"><div class="shell trust-feature-grid"><article><span>01</span><h2>${tr('Notre mission', 'Our mission')}</h2><p>${tr('Rendre les outils numériques professionnels plus simples à évaluer, à utiliser et à déployer.', 'Make professional digital tools easier to assess, use and deploy.')}</p></article><article><span>02</span><h2>${tr('Notre méthode', 'Our method')}</h2><p>${tr('Décrire clairement le contenu, la compatibilité, les prérequis, la licence et le support avant tout achat.', 'Clearly state content, compatibility, prerequisites, licensing and support before purchase.')}</p></article><article><span>03</span><h2>${tr('Notre engagement', 'Our commitment')}</h2><p>${tr('Ne publier que des preuves vérifiables et distinguer les fonctions disponibles de celles qui attendent une validation.', 'Publish only verifiable proof and distinguish available capabilities from those awaiting validation.')}</p></article></div></section>
+      <section class="section section-tinted"><div class="shell support-promise"><div><span class="eyebrow">Mauritius · International</span><h2>${tr('Une entreprise numérique pensée pour le monde.', 'A digital business designed for the world.')}</h2><p>${tr('L’anglais et le dollar américain sont les réglages par défaut. Le français, l’espagnol, le portugais et plusieurs devises d’affichage sont également proposés.', 'English and US dollars are the defaults. French, Spanish, Portuguese and multiple display currencies are also available.')}</p></div><a class="btn btn-primary" href="contact.html">${tr('Contacter WebNova', 'Contact WebNova')}</a></div></section>`;
+  }
+
+  function renderContact() {
+    document.title = tr('Contact — WebNova Marketplace', 'Contact — WebNova Marketplace');
+    $('#pageContent').innerHTML = `
+      ${breadcrumb([{ label: 'Contact' }])}
+      <section class="page-hero"><div class="shell"><span class="eyebrow">Contact WebNova</span><h1>${tr('Parlons de votre besoin.', 'Tell us what you need.')}</h1><p>${tr('Questions produit, compatibilité, licence ou partenariat : choisissez le canal le plus adapté.', 'Product, compatibility, licensing or partnership questions: choose the channel that suits you.')}</p></div></section>
+      <section class="section"><div class="shell support-channel-grid"><a href="mailto:hello@webnova.company"><span>@</span><h2>Email</h2><p>hello@webnova.company</p><b>${tr('Envoyer un email', 'Send an email')} →</b></a><a href="https://wa.me/23058574757" target="_blank" rel="noopener"><span>WA</span><h2>WhatsApp</h2><p>+230 5857 4757</p><b>${tr('Écrire sur WhatsApp', 'Message on WhatsApp')} →</b></a><a href="faq.html"><span>?</span><h2>FAQ</h2><p>${tr('Réponses sur les produits, licences et commandes.', 'Answers about products, licences and orders.')}</p><b>${tr('Consulter la FAQ', 'Read the FAQ')} →</b></a><a href="support.html"><span>DOC</span><h2>${tr('Centre d’aide', 'Help centre')}</h2><p>${tr('Documentation et parcours d’assistance.', 'Documentation and support routes.')}</p><b>${tr('Obtenir de l’aide', 'Get help')} →</b></a></div></section>
+      <section class="section section-tinted"><div class="shell support-promise"><div><span class="eyebrow">${tr('Transparence', 'Transparency')}</span><h2>${tr('Aucun formulaire factice.', 'No simulated contact form.')}</h2><p>${tr('Les canaux ci-dessus sont les moyens de contact actuellement disponibles. Aucun délai de réponse garanti n’est affiché sans données vérifiables.', 'The channels above are the contact methods currently available. No guaranteed response time is displayed without verifiable data.')}</p></div></div></section>`;
+  }
+
   function renderRoadmap() {
     document.title = 'Roadmap — WebNova Marketplace';
     $('#pageContent').innerHTML = `
@@ -922,15 +985,89 @@
         ['9. Transferts internationaux', 'Certains prestataires peuvent traiter des données hors de Maurice. WebNova sélectionne des fournisseurs offrant des garanties contractuelles et techniques adaptées.'],
         ['10. Contact', 'Pour toute question relative à la confidentialité, contactez hello@webnova.company. Les informations relatives au responsable légal et à l’autorité compétente seront complétées avant l’ouverture commerciale.']
       ]
+    },
+    legal: {
+      eyebrow: 'Company information', title: 'Legal notice', updated: 'Last updated: 14 July 2026',
+      intro: 'This page identifies the publisher and the current legal status of the WebNova Marketplace pre-launch website.',
+      sections: [
+        ['1. Website publisher', 'Trading name: WebNova Studio. Activity: development and planned sale of standardised digital products. Country of operation: Mauritius. Contact: hello@webnova.company — WhatsApp: +230 5857 4757.'],
+        ['2. Legal identity before sales', 'The registered legal name, business registration number, registered address and applicable tax identifiers have not been published on this pre-launch site. These details must be completed and verified before accepting payments.'],
+        ['3. Publication and contact', 'The website is managed by the WebNova Studio team. Questions about content, rights or technical issues can be sent to hello@webnova.company.'],
+        ['4. Hosting and domain', 'The website is delivered through professional hosting and content-delivery infrastructure. Current hosting-provider details and the domain registrant records must be verified against the production contracts before commercial opening.'],
+        ['5. Intellectual property', 'The WebNova name, visual identity, catalogue copy, product concepts and original assets are protected. Reproduction, redistribution or commercial reuse requires prior written permission.'],
+        ['6. Pre-launch status', 'The catalogue is available for evaluation. Checkout, customer authentication and automatic digital delivery remain disabled until provider approval, security testing and final product-file validation are complete.']
+      ]
     }
   };
 
+  const legalPagesEn = {
+    refunds: {
+      eyebrow: 'Digital purchases', title: 'Refund policy', updated: 'Last updated: 14 July 2026',
+      intro: 'This policy explains how refund requests for WebNova digital products will be assessed after commercial activation.',
+      sections: [
+        ['1. Digital-product nature', 'WebNova products are downloadable or online digital content such as templates, design files, guides, workflows, prompts and courses. When a customer expressly requests immediate access, performance of the digital supply begins before any otherwise applicable cooling-off period ends.'],
+        ['2. General rule', 'Once a file has been downloaded, accessed or made available, the purchase is normally final because digital content cannot be physically returned. Mandatory consumer rights remain unaffected.'],
+        ['3. Eligible situations', 'A request may be reviewed when a file is corrupted, the supplied product differs materially from its description, a duplicate charge occurred, or a confirmed technical failure permanently prevents access after reasonable support.'],
+        ['4. Normally ineligible situations', 'A change of mind, a compatibility limitation clearly disclosed before purchase, insufficient skill to use the product, or no longer needing the product does not automatically qualify for a refund.'],
+        ['5. Request procedure', 'Contact hello@webnova.company within 14 days of purchase with the order number, purchase email and clear evidence of the issue. When FastSpring acts as Merchant of Record, its checkout terms and support process may also apply.'],
+        ['6. Decision and timing', 'Eligible requests will be assessed fairly. Approved refunds are returned through the original payment method by the relevant provider; bank processing times vary by method and country.']
+      ]
+    },
+    license: {
+      eyebrow: 'Usage rights', title: 'Usage licence', updated: 'Version 1.0 — 14 July 2026',
+      intro: 'This licence explains what customers may and may not do with WebNova digital products.',
+      sections: [
+        ['1. Standard licence', 'Unless a product page states otherwise, purchase grants a non-exclusive, non-transferable, worldwide licence to create one personal or commercial end project.'],
+        ['2. Permitted use', 'Customers may customise the product, adapt it to a brand, use it for their own organisation or one client, and publish the resulting website, application, document or campaign as an end product.'],
+        ['3. Prohibited use', 'Source files may not be resold, shared, sublicensed, publicly distributed or repackaged as a competing template, kit or downloadable resource, even after modification.'],
+        ['4. Client projects', 'A standard licence may cover one client end project where the product page permits it. Each additional client or project requires a separate licence. Source files must not be made publicly accessible.'],
+        ['5. AI products and prompts', 'Outputs created with prompts or AI agents are also governed by the relevant third-party AI provider terms. WebNova does not guarantee that third-party generated output is exclusive.'],
+        ['6. Courses and publications', 'Videos, workbooks, eBooks and guides are licensed to the purchaser. Recording, sharing access, broadcasting or distributing them to a group or company without an appropriate licence is prohibited.'],
+        ['7. Intellectual property', 'WebNova and its creators retain all intellectual-property rights in source files, documentation, brands and content. A licence is permission to use, not a transfer of ownership.'],
+        ['8. Termination', 'The licence ends automatically after a material breach. The customer must stop using the product and remove affected copies, without limiting any other lawful remedy.']
+      ]
+    },
+    terms: {
+      eyebrow: 'Contract framework', title: 'Terms of sale', updated: 'Effective 14 July 2026',
+      intro: 'These terms govern the planned sale of WebNova Studio digital products and pre-recorded courses.',
+      sections: [
+        ['1. Seller and activity', 'WebNova Studio is preparing a standardised digital-product storefront operated from Mauritius. Contact: hello@webnova.company — WhatsApp: +230 5857 4757. The full registered name, address and registration number must be published before sales begin.'],
+        ['2. Products', 'Each listing describes the main characteristics, format, compatibility, indicative price and planned licence. Presentation previews are labelled and must be replaced or supplemented by verified product screenshots before commercial activation.'],
+        ['3. Orders', 'Customers will review the cart, provide accurate information and accept the applicable terms before payment. No sale is currently concluded on this pre-launch version. After activation, an order will be confirmed only after server-side provider verification.'],
+        ['4. Prices and tax', 'USD is the default display currency; CAD, EUR and MUR estimates are also available. Display conversions are indicative before launch. Checkout will present the transaction currency, taxes and final total before payment.'],
+        ['5. Merchant of Record', 'If approved and activated, FastSpring will act as Merchant of Record for the transaction. Its checkout terms will govern payment processing, transaction taxes and related obligations. WebNova will not store complete card numbers.'],
+        ['6. Digital delivery', 'After commercial activation and verified payment, eligible products will be delivered through email and the customer account. Access will be granted only after a verified server event and through controlled download links.'],
+        ['7. Cancellation and refunds', 'Where a customer requests immediate digital access, supply begins without delay. Refund eligibility remains governed by the published refund policy and any mandatory consumer law.'],
+        ['8. Support', 'The duration and scope of planned support are stated on each product page and confirmed at launch. Support does not include custom development or unrelated third-party services unless expressly stated.'],
+        ['9. Liability', 'Products will be supplied with reasonable care but without a guarantee of commercial outcome. Liability is limited only to the extent permitted by applicable law.'],
+        ['10. Governing law', 'These terms are governed by Mauritian law, subject to mandatory consumer protections in the customer country. The parties should first attempt an amicable resolution.']
+      ]
+    },
+    privacy: {
+      eyebrow: 'Data protection', title: 'Privacy policy', updated: 'Last updated: 14 July 2026',
+      intro: 'WebNova limits personal-data processing to what is necessary for operating and securing the marketplace.',
+      sections: [
+        ['1. Data categories', 'WebNova may process name, email address, country, order details, download history, preferences, support requests and technical navigation data. Complete payment-card data will be handled by the payment provider.'],
+        ['2. Purposes', 'Data may be used to process orders, deliver files, manage accounts, provide support, prevent fraud, comply with legal duties and, with consent where required, send marketing communications.'],
+        ['3. Legal bases', 'Depending on the context, processing relies on contract performance, legal obligations, legitimate interests in security and service improvement, or consent.'],
+        ['4. Service providers', 'Necessary information may be shared with hosting, payment, transactional email, storage, analytics and support providers. Each provider should receive only the information required for its role.'],
+        ['5. Retention', 'Order records will be retained for applicable accounting and tax periods. Inactive-account and marketing data should be deleted or anonymised under proportionate retention schedules.'],
+        ['6. Cookies', 'The platform may use cookies required for security, cart state and sessions. Non-essential analytics or marketing cookies must not be enabled before consent where applicable law requires it.'],
+        ['7. Individual rights', 'Depending on applicable law, individuals may request access, correction, deletion, restriction, objection or portability by contacting hello@webnova.company.'],
+        ['8. Security', 'WebNova plans reasonable technical and organisational safeguards, including encrypted connections, access controls, data minimisation and monitoring of sensitive operations.'],
+        ['9. International transfers', 'Some providers may process data outside Mauritius. WebNova should select providers with appropriate contractual and technical safeguards.'],
+        ['10. Privacy contact', 'Privacy questions can be sent to hello@webnova.company. The registered controller identity and any required authority details must be completed before commercial opening.']
+      ]
+    },
+    legal: legalPages.legal
+  };
+
   function renderLegal(kind) {
-    const legal = legalPages[kind];
+    const legal = language === 'fr' ? legalPages[kind] : (legalPagesEn[kind] || legalPages[kind]);
     $('#pageContent').innerHTML = `
       ${breadcrumb([{ label: legal.title }])}
       <section class="legal-hero"><div class="shell"><span class="eyebrow">${legal.eyebrow}</span><h1>${legal.title}</h1><p>${legal.intro}</p><small>${legal.updated}</small></div></section>
-      <section class="legal-section"><div class="shell legal-layout"><aside><h2>Sommaire</h2><nav>${legal.sections.map(([title], index) => `<a href="#section-${index + 1}">${title}</a>`).join('')}</nav><div><b>Une question ?</b><p>Contactez notre équipe avant votre achat.</p><a href="mailto:hello@webnova.company">hello@webnova.company</a></div></aside><article>${legal.sections.map(([title, body], index) => `<section id="section-${index + 1}"><h2>${title}</h2><p>${body}</p></section>`).join('')}<div class="legal-contact"><span>✦</span><div><h2>Besoin d’une précision ?</h2><p>Notre équipe peut vous aider à comprendre les conditions applicables à votre achat.</p><a class="btn btn-primary" href="mailto:hello@webnova.company">Contacter WebNova</a></div></div></article></div></section>`;
+      <section class="legal-section"><div class="shell legal-layout"><aside><h2>${tr('Sommaire', 'Contents')}</h2><nav>${legal.sections.map(([title], index) => `<a href="#section-${index + 1}">${title}</a>`).join('')}</nav><div><b>${tr('Une question ?', 'A question?')}</b><p>${tr('Contactez notre équipe avant votre achat.', 'Contact our team before purchase.')}</p><a href="mailto:hello@webnova.company">hello@webnova.company</a></div></aside><article>${legal.sections.map(([title, body], index) => `<section id="section-${index + 1}"><h2>${title}</h2><p>${body}</p></section>`).join('')}<div class="legal-contact"><span>✦</span><div><h2>${tr('Besoin d’une précision ?', 'Need clarification?')}</h2><p>${tr('Notre équipe peut vous aider à comprendre les conditions applicables à votre achat.', 'Our team can help explain the conditions that apply to a planned purchase.')}</p><a class="btn btn-primary" href="mailto:hello@webnova.company">${tr('Contacter WebNova', 'Contact WebNova')}</a></div></div></article></div></section>`;
   }
 
   function renderPage() {
@@ -941,8 +1078,10 @@
       orders: renderOrders, downloads: renderDownloads, licenses: renderLicenses,
       invoices: renderInvoices, checkout: renderCheckout,
       blog: renderBlog, article: renderArticle, support: renderSupport, roadmap: renderRoadmap,
+      about: renderAbout, contact: renderContact,
       faq: renderFAQ, refunds: () => renderLegal('refunds'), license: () => renderLegal('license'),
-      terms: () => renderLegal('terms'), privacy: () => renderLegal('privacy')
+      terms: () => renderLegal('terms'), privacy: () => renderLegal('privacy'), legal: () => renderLegal('legal'),
+      notfound: () => { document.title = 'Page not found — WebNova Marketplace'; $('#pageContent').innerHTML = `<section class="page-hero"><div class="shell"><span class="eyebrow">404</span><h1>Page not found</h1><p>The requested page does not exist or has moved.</p><div class="button-row"><a class="btn btn-primary" href="index.html">Return home</a><a class="btn btn-ghost" href="catalogue.html">Open the catalogue</a></div></div></section>`; }
     };
     (routes[page] || renderHome)();
   }
@@ -1067,7 +1206,7 @@
     if (!input) return;
     let activeIndex = -1;
 
-    const resultLink = (product) => `<a class="search-result-item" role="option" aria-selected="false" href="product.html?id=${product.id}">${productVisual(product, 'visual-search')}<span><small>${product.collection}</small><b>${product.title}</b><i>${product.tagline}</i></span><strong>${formatPrice(product.price)}</strong></a>`;
+    const resultLink = (product) => `<a class="search-result-item" role="option" aria-selected="false" href="product.html?id=${product.id}">${productVisual(product, 'visual-search')}<span><small>${product.collection}</small><b>${product.title}</b><i>${localizedProductTagline(product)}</i></span><strong>${formatPrice(product.price)}</strong></a>`;
     const resultSection = (title, items, link = '') => items.length ? `<section class="search-result-section"><div class="search-result-head"><b>${title}</b>${link}</div>${items.join('')}</section>` : '';
 
     function showResults(term) {

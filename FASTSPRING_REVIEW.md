@@ -58,13 +58,14 @@ puis élargir le catalogue :
 - [x] catalogue, catégories, bundles et Academy ;
 - [x] panier et parcours de checkout en préversion ;
 - [x] FAQ, remboursement, confidentialité, licence et conditions de vente ;
+- [x] pages À propos, Contact et Mentions légales ;
 - [ ] nom légal exact de l’entreprise ;
 - [ ] adresse commerciale ;
 - [ ] numéro d’enregistrement ;
 - [ ] produits réels téléchargeables ;
 - [ ] checkout FastSpring en mode test ;
 - [ ] livraison automatique testée ;
-- [ ] domaine `webnova.company` publié avec HTTPS ;
+- [x] domaine `webnova.company` publié avec HTTPS ;
 - [ ] conditions juridiques relues pour Maurice et les marchés ciblés.
 
 ## Configuration technique après accord de FastSpring

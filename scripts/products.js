@@ -522,6 +522,42 @@ window.WebNovaData = (() => {
     { name: 'Bundles', icon: 'BX', description: 'Collections de ressources complémentaires proposées ensemble.', countLabel: '10 bundles' }
   ];
 
+  const productReadiness = {
+    status: 'catalogue-review',
+    label: 'Catalogue review',
+    notice: 'Product presentation under final review. No payment or digital delivery is currently enabled.'
+  };
+
+  products.forEach((product) => {
+    const isCourse = product.category === 'Academy';
+    const isTemplate = product.type.toLowerCase().includes('template');
+    const toolRequirement = product.compatible || 'Compatible software listed on this page';
+    product.version ||= '0.9 — review edition';
+    product.updatedAt ||= '14 July 2026';
+    product.longDescription ||= `${product.description} The listing identifies the included resources, supported format, compatibility, usage rights and support scope so the product can be assessed before commercial activation.`;
+    product.prerequisites ||= [
+      toolRequirement,
+      isCourse ? 'A modern browser and a stable internet connection' : 'A computer able to open the advertised file format',
+      isTemplate ? 'Basic knowledge of web publishing or access to a developer' : 'Basic familiarity with the product subject',
+      'A valid licence for any third-party software mentioned on this page'
+    ];
+    product.documentation ||= [
+      'Quick-start and installation guide',
+      'Compatibility and prerequisites checklist',
+      'Configuration or customisation instructions',
+      'Troubleshooting, support and licence reference'
+    ];
+    product.screenshots ||= [
+      { label: 'Product cover', description: `Original WebNova presentation cover for ${product.title}.`, status: product.cover ? 'Product asset' : 'Illustrative preview' },
+      { label: 'Included content', description: `Structured overview of the principal resources included with ${product.title}.`, status: 'Illustrative preview' },
+      { label: 'Compatibility', description: `Preview of the supported formats and compatibility requirements: ${product.compatible}.`, status: 'Illustrative preview' },
+      { label: 'Documentation', description: 'Preview of the documentation structure planned for the commercial package.', status: 'Illustrative preview' }
+    ];
+    product.licenseName ||= 'WebNova Standard Commercial Licence';
+    product.licenseSummary ||= 'One personal or commercial end project, unless the final product page states otherwise. Source-file resale, redistribution and sublicensing are prohibited.';
+    product.readiness ||= { ...productReadiness };
+  });
+
   const collections = [...new Set(products.map((product) => product.collection))];
   const commerce = {
     provider: 'fastspring',

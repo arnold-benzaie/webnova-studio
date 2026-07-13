@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 
 const root = process.cwd();
 const htmlFiles = fs.readdirSync(root).filter((name) => name.endsWith('.html'));
@@ -10,7 +11,8 @@ const requiredPages = [
   'academy.html', 'panier.html', 'checkout.html', 'account.html', 'orders.html',
   'downloads.html', 'licenses.html', 'invoices.html', 'faq.html',
   'blog.html', 'article.html', 'support.html', 'roadmap.html',
-  'refund-policy.html', 'license.html', 'terms.html', 'privacy.html'
+  'about.html', 'contact.html', 'refund-policy.html', 'license.html', 'terms.html',
+  'privacy.html', 'legal-notice.html', '404.html'
 ];
 
 for (const page of requiredPages) {
@@ -21,6 +23,9 @@ for (const file of htmlFiles) {
   const source = fs.readFileSync(path.join(root, file), 'utf8');
   if (!source.includes('<meta name="viewport"')) errors.push(`${file}: viewport manquant`);
   if (!source.includes('<title>')) errors.push(`${file}: titre manquant`);
+  if (!source.includes('<meta name="description"')) errors.push(`${file}: meta description manquante`);
+  const isNoIndex = source.includes('name="robots" content="noindex');
+  if (!isNoIndex && file !== 'product.html' && !source.includes('rel="canonical"')) errors.push(`${file}: canonical manquant`);
   if (!source.includes('id="pageContent"')) errors.push(`${file}: conteneur pageContent manquant`);
   for (const match of source.matchAll(localRefPattern)) {
     const ref = match[1];
@@ -39,6 +44,19 @@ if (/rating:\s*(?!null\b)[0-9.]+/.test(productsSource)) errors.push('Notes produ
 if (/reviews:\s*[1-9]/.test(productsSource)) errors.push('Compteurs d’avis non vérifiés détectés dans les données');
 if (/sales:\s*[1-9]/.test(productsSource)) errors.push('Compteurs de ventes non vérifiés détectés dans les données');
 
+const productSandbox = { window: {} };
+vm.runInNewContext(productsSource, productSandbox);
+const products = productSandbox.window.WebNovaData?.products || [];
+for (const product of products) {
+  for (const field of ['description', 'longDescription', 'format', 'compatible', 'licenseName', 'licenseSummary', 'version', 'updatedAt']) {
+    if (!String(product[field] || '').trim()) errors.push(`${product.id}: champ produit manquant ${field}`);
+  }
+  for (const field of ['features', 'prerequisites', 'documentation', 'screenshots']) {
+    if (!Array.isArray(product[field]) || product[field].length < 4) errors.push(`${product.id}: section produit incomplète ${field}`);
+  }
+  if (product.screenshots?.some((item) => !item.label || !item.description || !item.status)) errors.push(`${product.id}: aperçu produit non documenté`);
+}
+
 const storefrontSource = fs.readFileSync(path.join(root, 'scripts/main.js'), 'utf8');
 if (!storefrontSource.includes("readStore('webnova-language-v2', 'en')")) errors.push('Langue officielle par défaut incorrecte: anglais requis');
 if (!storefrontSource.includes("readStore('webnova-currency-v2', 'USD')")) errors.push('Devise officielle par défaut incorrecte: USD requis');
@@ -49,6 +67,14 @@ for (const claim of forbiddenPublicClaims) {
 
 for (const capability of ['languageSelect', 'currencySelect', 'webnova-theme', 'data-theme-toggle', 'applyTheme', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderArticle', 'renderSupport', 'renderRoadmap', 'setupMotion']) {
   if (!storefrontSource.includes(capability)) errors.push(`Capacité marketplace manquante: ${capability}`);
+}
+for (const capability of ['renderAbout', 'renderContact', "renderLegal('legal')", 'product.prerequisites', 'product.documentation', 'product.screenshots']) {
+  if (!storefrontSource.includes(capability)) errors.push(`Contenu de confiance manquant: ${capability}`);
+}
+
+for (const match of storefrontSource.matchAll(/href="([^"#]+\.html)(?:[?#][^"}]*)?"/g)) {
+  const ref = match[1];
+  if (!ref.includes('${') && !fs.existsSync(path.join(root, ref))) errors.push(`Lien dynamique introuvable: ${ref}`);
 }
 
 const commercePath = path.join(root, 'scripts/commerce.js');
@@ -77,6 +103,11 @@ for (const match of productsSource.matchAll(/cover:\s*'([^']+)'/g)) {
 
 if (!fs.existsSync(path.join(root, 'assets/og-webnova-v2.jpg'))) {
   errors.push('Carte de partage WebNova introuvable: assets/og-webnova-v2.jpg');
+}
+
+const buildSource = fs.readFileSync(path.join(root, 'scripts/build-static.mjs'), 'utf8');
+for (const capability of ['property="og:title"', 'twitter:card', 'application/ld+json', 'sitemap.xml', 'robots.txt', 'rel="preload"']) {
+  if (!buildSource.includes(capability)) errors.push(`Optimisation de build manquante: ${capability}`);
 }
 
 if (errors.length) {

@@ -30,7 +30,7 @@ function prepareHtml(source) {
   output = output
     .replace(
       /<link href="(https:\/\/fonts\.googleapis\.com\/[^"]+)" rel="stylesheet">/,
-      '<link href="$1" rel="stylesheet" media="print" onload="this.media=\'all\'">\n  <noscript><link href="$1" rel="stylesheet"></noscript>'
+      '<link rel="preload" href="$1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">\n  <noscript><link href="$1" rel="stylesheet"></noscript>'
     )
     .replace(
       /(styles\/main\.css|scripts\/products\.js|scripts\/commerce\.js|scripts\/main\.js)(?:\?v=[^"']*)?/g,
@@ -83,6 +83,17 @@ for (const directory of ['assets', 'scripts', 'styles']) {
   fs.cpSync(path.join(root, directory), path.join(client, directory), { recursive: true });
 }
 
+for (const unusedAsset of [
+  'assets/og-webnova.png',
+  'assets/og-webnova-v2.png',
+  'assets/products/aurora-commerce-cover.png',
+  'scripts/build-static.mjs',
+  'scripts/validate.mjs',
+  'scripts/test-fastspring.mjs'
+]) {
+  fs.rmSync(path.join(client, unusedAsset), { force: true });
+}
+
 const productSandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'scripts', 'products.js'), 'utf8'), productSandbox);
 const productIds = productSandbox.window.WebNovaData.products.map((product) => product.id);
@@ -93,8 +104,8 @@ const articleIds = [
 ];
 const sitemapEntries = [
   ['https://webnova.company/', '1.0', 'weekly'],
-  ...['catalogue', 'categories', 'bundles', 'academy', 'blog', 'support', 'roadmap', 'faq'].map((name) => [`https://webnova.company/${name}.html`, name === 'catalogue' ? '0.9' : '0.8', name === 'catalogue' ? 'daily' : 'weekly']),
-  ...['refund-policy', 'license', 'terms', 'privacy'].map((name) => [`https://webnova.company/${name}.html`, '0.5', 'yearly']),
+  ...['catalogue', 'categories', 'bundles', 'academy', 'blog', 'support', 'roadmap', 'faq', 'about', 'contact'].map((name) => [`https://webnova.company/${name}.html`, name === 'catalogue' ? '0.9' : '0.8', name === 'catalogue' ? 'daily' : 'weekly']),
+  ...['refund-policy', 'license', 'terms', 'privacy', 'legal-notice'].map((name) => [`https://webnova.company/${name}.html`, '0.5', 'yearly']),
   ...productIds.map((id) => [`https://webnova.company/product.html?id=${id}`, '0.8', 'weekly']),
   ...articleIds.map((id) => [`https://webnova.company/article.html?id=${id}`, '0.7', 'monthly'])
 ];
@@ -120,9 +131,10 @@ const worker = `const worker = {
     const response = await env.ASSETS.fetch(new Request(assetUrl, request));
     if (response.status !== 404) return response;
 
-    return new Response('Page introuvable', {
+    const notFound = await env.ASSETS.fetch(new Request(new URL('/404.html', request.url), request));
+    return new Response(notFound.body, {
       status: 404,
-      headers: { 'content-type': 'text/plain; charset=utf-8' }
+      headers: { 'content-type': 'text/html; charset=utf-8' }
     });
   }
 };
