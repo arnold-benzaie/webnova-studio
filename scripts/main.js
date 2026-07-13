@@ -11,6 +11,8 @@
   const params = new URLSearchParams(window.location.search);
   const language = readStore('webnova-language-v2', 'en');
   const selectedCurrency = readStore('webnova-currency-v2', 'USD');
+  let activeTheme = readStore('webnova-theme', 'midnight');
+  if (!['midnight', 'white'].includes(activeTheme)) activeTheme = 'midnight';
   const locales = { en: 'en-US', fr: 'fr-FR', es: 'es-ES', pt: 'pt-PT' };
   const currencies = {
     USD: { rate: 0.0209, label: 'USD $' },
@@ -62,6 +64,7 @@
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  applyTheme(activeTheme);
   const formatPrice = (value) => currency.format(value * currencyConfig.rate).replace('MUR', 'Rs');
   const findProduct = (id) => products.find((product) => product.id === id);
 
@@ -123,6 +126,22 @@
     localStorage.setItem(key, JSON.stringify(value));
   }
 
+  function applyTheme(theme) {
+    activeTheme = theme === 'white' ? 'white' : 'midnight';
+    document.documentElement.dataset.theme = activeTheme;
+    document.documentElement.style.colorScheme = activeTheme === 'white' ? 'light' : 'dark';
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = activeTheme === 'white' ? '#f7f9fd' : '#050b16';
+    $$('[data-theme-toggle]').forEach((button) => {
+      const whiteIsActive = activeTheme === 'white';
+      const label = whiteIsActive ? tr('Activer le thème bleu nuit', 'Switch to midnight theme') : tr('Activer le thème blanc', 'Switch to white theme');
+      button.setAttribute('aria-label', label);
+      button.setAttribute('title', label);
+      button.setAttribute('aria-pressed', String(whiteIsActive));
+      button.innerHTML = `<span aria-hidden="true">${whiteIsActive ? '☾' : '☀'}</span>`;
+    });
+  }
+
   function getCart() {
     return readStore('webnova-cart', {});
   }
@@ -167,6 +186,7 @@
               <label><span class="sr-only">Language</span><select id="languageSelect" aria-label="Language"><option value="en" ${language === 'en' ? 'selected' : ''}>EN</option><option value="fr" ${language === 'fr' ? 'selected' : ''}>FR</option><option value="es" ${language === 'es' ? 'selected' : ''}>ES</option><option value="pt" ${language === 'pt' ? 'selected' : ''}>PT</option></select></label>
               <label><span class="sr-only">Devise</span><select id="currencySelect" aria-label="Devise">${Object.entries(currencies).map(([code, config]) => `<option value="${code}" ${selectedCurrency === code ? 'selected' : ''}>${config.label}</option>`).join('')}</select></label>
             </div>
+            <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="${activeTheme === 'white' ? tr('Activer le thème bleu nuit', 'Switch to midnight theme') : tr('Activer le thème blanc', 'Switch to white theme')}" aria-pressed="${activeTheme === 'white'}"><span aria-hidden="true">${activeTheme === 'white' ? '☾' : '☀'}</span></button>
             <button class="icon-button search-button" type="button" data-open-search aria-label="${t('search')}"><span aria-hidden="true">⌕</span></button>
             <a class="icon-button" href="wishlist.html" aria-label="Liste de souhaits"><span aria-hidden="true">♡</span><span class="count-badge" data-wishlist-count>0</span></a>
             <a class="icon-button" href="panier.html" aria-label="Panier"><span aria-hidden="true">▱</span><span class="count-badge" data-cart-count>0</span></a>
@@ -980,6 +1000,11 @@
       }
       if (event.target.closest('[data-open-search]')) openSearch();
       if (event.target.closest('[data-close-search]')) closeSearch();
+      if (event.target.closest('[data-theme-toggle]')) {
+        const nextTheme = activeTheme === 'white' ? 'midnight' : 'white';
+        writeStore('webnova-theme', nextTheme);
+        applyTheme(nextTheme);
+      }
       if (event.target.closest('[data-toggle-support]')) {
         const panel = $('#supportPanel');
         const isOpen = !panel.hidden;

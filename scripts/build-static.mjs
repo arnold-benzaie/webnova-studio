@@ -7,6 +7,7 @@ const dist = path.join(root, 'dist');
 const client = path.join(dist, 'client');
 const server = path.join(dist, 'server');
 const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || '20260714').slice(0, 8);
+const themeBootstrap = `<script>(function(){try{var theme=JSON.parse(localStorage.getItem('webnova-theme'));document.documentElement.dataset.theme=theme==='white'?'white':'midnight';document.documentElement.style.colorScheme=theme==='white'?'light':'dark'}catch(_){document.documentElement.dataset.theme='midnight'}})();</script>`;
 
 const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
   <span>WEBNOVA MARKETPLACE</span>
@@ -17,6 +18,9 @@ const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
 
 function prepareHtml(source) {
   let output = source;
+  if (!output.includes("localStorage.getItem('webnova-theme')")) {
+    output = output.replace('</title>', `</title>${themeBootstrap}`);
+  }
   if (!output.includes('scripts/commerce.js')) {
     output = output.replace(
       '<script defer src="scripts/main.js"></script>',

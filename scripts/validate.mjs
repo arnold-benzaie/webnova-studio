@@ -47,7 +47,7 @@ for (const claim of forbiddenPublicClaims) {
   if (storefrontSource.includes(claim)) errors.push(`Affirmation publique non vérifiée détectée: ${claim}`);
 }
 
-for (const capability of ['languageSelect', 'currencySelect', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderArticle', 'renderSupport', 'renderRoadmap', 'setupMotion']) {
+for (const capability of ['languageSelect', 'currencySelect', 'webnova-theme', 'data-theme-toggle', 'applyTheme', 'marketplaceUniverses', 'searchProducts', 'renderBlog', 'renderArticle', 'renderSupport', 'renderRoadmap', 'setupMotion']) {
   if (!storefrontSource.includes(capability)) errors.push(`Capacité marketplace manquante: ${capability}`);
 }
 
