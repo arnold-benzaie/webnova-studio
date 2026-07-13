@@ -5,6 +5,34 @@ const root = process.cwd();
 const dist = path.join(root, 'dist');
 const client = path.join(dist, 'client');
 const server = path.join(dist, 'server');
+const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || '20260713').slice(0, 8);
+
+const bootFallback = `<section class="boot-fallback shell" aria-live="polite">
+  <span>WEBNOVA MARKETPLACE</span>
+  <h1>Ressources numériques premium</h1>
+  <p>La marketplace se charge. Si l’affichage tarde, vous pouvez ouvrir directement le catalogue.</p>
+  <a href="catalogue.html">Ouvrir le catalogue</a>
+</section>`;
+
+function prepareHtml(source) {
+  return source
+    .replace(
+      /<link href="(https:\/\/fonts\.googleapis\.com\/[^"]+)" rel="stylesheet">/,
+      '<link href="$1" rel="stylesheet" media="print" onload="this.media=\'all\'">\n  <noscript><link href="$1" rel="stylesheet"></noscript>'
+    )
+    .replace(
+      /(styles\/main\.css|scripts\/products\.js|scripts\/main\.js)(?:\?v=[^"']*)?/g,
+      `$1?v=${assetVersion}`
+    )
+    .replace(
+      '<main id="pageContent"><noscript><p class="shell">JavaScript doit être activé pour consulter le catalogue WebNova.</p></noscript></main>',
+      `<main id="pageContent">${bootFallback}<noscript><p class="shell">JavaScript doit être activé pour consulter le catalogue WebNova.</p></noscript></main>`
+    )
+    .replace(
+      '<main id="pageContent"></main>',
+      `<main id="pageContent">${bootFallback}</main>`
+    );
+}
 
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(client, { recursive: true });
@@ -15,7 +43,13 @@ const rootFiles = fs.readdirSync(root).filter((name) =>
 );
 
 for (const name of rootFiles) {
-  fs.copyFileSync(path.join(root, name), path.join(client, name));
+  const source = path.join(root, name);
+  const destination = path.join(client, name);
+  if (name.endsWith('.html')) {
+    fs.writeFileSync(destination, prepareHtml(fs.readFileSync(source, 'utf8')));
+  } else {
+    fs.copyFileSync(source, destination);
+  }
 }
 
 for (const directory of ['assets', 'scripts', 'styles']) {
